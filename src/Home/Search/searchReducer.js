@@ -1,5 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
-import db from "src/Database";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const searchSlice = createSlice({
     name: 'search',
@@ -10,12 +9,12 @@ const searchSlice = createSlice({
         city: '',
         streetAddress: '',
         distance: [],
-        results: []
+        results: [],
+        restaurants: []
     },
     reducers: {
         setSearchName: (state, action) => {
             state.name = action.payload;
-            console.log("State Name: " + state.name)
             state.results = filterRestaurants(state);
         },
         setCuisineFilter: (state, action) => {
@@ -36,35 +35,30 @@ const searchSlice = createSlice({
         },
         setDistance: (state, action) => {
             state.distance = action.payload;
+        },
+        setStateRestaurants: (state, action) => {
+            state.restaurants = action.payload;
+            state.results = filterRestaurants(state);
         }
     },
 });
 
-const filterRestaurants = (state) => {
-
-    const {name, cuisine, zipCode, city, streetAddress} = state;
-
-    const filteredResults = db.restaurants.filter((restaurant) => {
-      const nameMatch = name ? restaurant.name.includes(name) : true;
-      const cuisineMatch = cuisine ? restaurant.cuisine[0].includes(cuisine) : true;
-      const zipCodeMatch = zipCode ? restaurant.zipCode.includes(zipCode) : true;
-      const cityMatch = city ? restaurant.City.includes(city) : true;
-      const streetAddressMatch = streetAddress
-        ? restaurant.streetAddress.includes(streetAddress)
-        : true;
-
-        console.log(`name: ${name}, restaurant.name: ${restaurant.name}, nameMatch: ${nameMatch}`);
-        console.log(`cuisine: ${cuisine}, restaurant.cuisine: ${restaurant.cuisine}, cuisineMatch: ${cuisineMatch}`);
-        console.log(`zipCode: ${zipCode}, restaurant.zipCode: ${restaurant.zipCode}, zipCodeMatch: ${zipCodeMatch}`);
-        console.log(`city: ${city}, restaurant.city: ${restaurant.city}, cityMatch: ${cityMatch}`);
-        console.log(`streetAddress: ${streetAddress}, restaurant.streetAddress: ${restaurant.streetAddress}, streetAddressMatch: ${streetAddressMatch}`);
-     
+export const filterRestaurants = 
+    (state) => {
+      const { name, cuisine, zipCode, city, streetAddress, restaurants } = state;
+        
+      return restaurants.filter(restaurant => {
+        const nameMatch = name ? restaurant.name.toLowerCase().includes(name.toLowerCase()) : true;
+        const cuisineMatch = cuisine ? restaurant.cuisine[0].toLowerCase().includes(cuisine.toLowerCase()) : true;
+        const zipCodeMatch = zipCode ? restaurant.zipCode.includes(zipCode) : true;
+        const cityMatch = city ? restaurant.City.toLowerCase().includes(city.toLowerCase()) : true;
+        const streetAddressMatch = streetAddress
+          ? restaurant.streetAddress.toLowerCase().includes(streetAddress.toLowerCase())
+          : true;
+  
         return nameMatch && cuisineMatch && zipCodeMatch && cityMatch && streetAddressMatch;
-    });
-
-    console.log("Filtered Results:", filteredResults);
-    return filteredResults;
-  };
+      });
+    }
 
   export const {
     setSearchName,
@@ -72,7 +66,8 @@ const filterRestaurants = (state) => {
     setZipCodeFilter,
     setCityFilter,
     setStreetAddressFilter,
-    setDistance
+    setDistance,
+    setStateRestaurants
   } = searchSlice.actions;
 
   export default searchSlice.reducer;

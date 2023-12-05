@@ -1,10 +1,17 @@
-import {useSelector} from "react-redux"
-import { selectAllUsers } from "../Home/Users/usersSlice"
+import { useState, useEffect } from "react";
+import * as api from "src/store/api";
+const PostAuthor = ({authorId}) => {
+    const [author, setAuthor] = useState({});
 
-const PostAuthor = ({userId}) => {
-    const users = useSelector(selectAllUsers)
+    useEffect(() => {
+      const findUserById = async () => {
+        const user = await api.findUserById(authorId);
+        setAuthor(user);
+      };
+      findUserById();
+    }, []);
 
-    const author = users.find(user => user._id == userId);
+    
     return <span>by {author ? author.first_name + " " + author.last_name : "Anonymous"}</span>
 }
 

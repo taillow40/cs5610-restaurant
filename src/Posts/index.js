@@ -6,8 +6,6 @@ const ReviewsPage = () => {
 
     const {rId} = useParams();
 
-    console.log("Restaurant Id: ", rId)
-
     return (
         <div>
             <h1>Add Your Review</h1>

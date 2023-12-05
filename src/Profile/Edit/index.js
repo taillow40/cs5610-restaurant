@@ -2,12 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./index.css";
-import {
-  addProfile,
-  deleteProfile,
-  updateProfile,
-  setProfile,
-} from "src/Profile/profilesReducer";
 import * as client from "src/store/api";
 import { circle } from "fontawesome";
 
@@ -138,7 +132,6 @@ function Edit() {
           <button
             className="edit__save mt-5 "
             onClick={() => {
-              dispatch(updateProfile(p));
               updateUser(p);
             }}
           >

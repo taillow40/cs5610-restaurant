@@ -1,24 +1,41 @@
 import "./restaurant.css";
+import React from 'react'
 import ImageBox from "./ImageBox";
 import SummaryBox from "./SummaryBox";
 import ReviewsBox from "./ReviewsBox";
+import * as restaurantClient from "src/store/restaurants";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 function Restaurant() {
     const { rId } = useParams();
-    let restaurantId = parseInt(rId);
+
+    const [restaurant, setRestaurant] = useState({});
+    const [reviews, setReviews] = useState([]);
+
+    useEffect(() => {
+      const findAllRestaurants = async () => {
+        const restaurant = await restaurantClient.findRestaurantById(rId);
+        setRestaurant(restaurant);
+      };
+      const findAllReviews = async () => {
+        const reviews = await restaurantClient.reviews(rId);
+        setReviews(reviews);
+      };
+      findAllRestaurants();
+      findAllReviews();
+    }, []);
 
     return (
         <div className="flex-down">
-            <h1>Navbar in this space</h1>
             <div className="restaurant-card">
-            <ImageBox rId={restaurantId}/>
+            {restaurant && <ImageBox restaurant={restaurant} reviews={reviews}/>}
             </div>
             <div className="restaurant-card">
-            <SummaryBox rId={restaurantId}/>
+            {restaurant &&<SummaryBox restaurant={restaurant} reviews={reviews}/>}
             </div>
             <div className="restaurant-card">
-            <ReviewsBox rId={restaurantId}/>
+            {restaurant &&<ReviewsBox restaurant={restaurant} reviews={reviews}/>}
             </div>
         </div>
     )

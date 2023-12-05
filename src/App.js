@@ -45,8 +45,8 @@ function App() {
     <BrowserRouter>
       <Provider store={store}>
         <Navbar validUser={validUser} />
-          <Route path="/" exact element={<Home />} />
         <Routes>
+          <Route path="/" exact element={<Home />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/profile" element = {<Personal />} />
           <Route path="/profile/:profileId" element = {<Profile />} />

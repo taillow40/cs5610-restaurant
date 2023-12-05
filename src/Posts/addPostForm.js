@@ -2,23 +2,20 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
-import { postAdd } from './postsSlice';
-import { selectAllUsers } from '../Home/Users/usersSlice';
 import {useNavigate} from 'react-router-dom';
 import './styling/posts.css'
+import * as client from "src/store/api";
 import PostStars from "./postStars"
-
-import db from "src/Database";
+import * as restaurantClient from "src/store/restaurants";
+import * as reviewClient from "src/store/reviews";
+import { useParams } from 'react-router-dom';
 
 const AddPostForm = ({restaurantId}) => {
 
-    const restaurants = db.restaurants;
-
-    console.log("Restaurants: ", {restaurants});
+    const [loggedInUser, setLoggedInUser] = useState({});
 
     const [restaurant, setRestaurant] = useState('');
     const [content, setContent] = useState('');
-    const [userId, setUserId] = useState('');
     const [rating, setRating] = useState(0);
     const [selectedAllergy, setSelectedAllergy] = useState('');
     const [allergyRating, setAllergyRating] = useState(0);
@@ -36,27 +33,33 @@ const AddPostForm = ({restaurantId}) => {
 
     const allergies = ['gluten-Free', 'nut-Free', 'dairy-Free', 'shellfish', 'vegetarian', 'vegan'];
     
-    const users = useSelector(selectAllUsers);
 
     const onRestaurantChanged = e => setRestaurant(e.target.value)
     const onContentChanged = e => setContent(e.target.value)
-    const onAuthorChanged = e => setUserId(e.target.value)
     const onRatingChanged = (newRating) => setRating(newRating);
     
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    console.log("Restaurant ID: ", restaurantId)
 
     useEffect(() => {
-        // Find the restaurant based on restaurantId and set its name
-        const selectedRestaurant = restaurants.find((r) => r.id == restaurantId);
-        console.log("Selected Restaurant ", selectedRestaurant);
-        if (selectedRestaurant) {
-          setRestaurant(selectedRestaurant.name);
+      const findRestaurant = async () => {
+        console.log(restaurantId);
+        const restaurant = await restaurantClient.findRestaurantById(restaurantId);
+        setRestaurant(restaurant);
+      };
+      const findUser = async () => {
+        const fetchedProfile = await client.account();
+        if (fetchedProfile) {
+          setLoggedInUser(fetchedProfile?.data);
+        } else {
+          navigate("/login");
         }
-      }, [restaurantId, restaurants]);
+      }
+      findUser();
+      findRestaurant();
+    }, []);
 
       const onPostReview = () => {
         if (restaurant && content) {
@@ -64,14 +67,15 @@ const AddPostForm = ({restaurantId}) => {
             id: nanoid(),
             restaurant_id: restaurantId,
             content: content,
-            user_id: userId,
+            user_id: loggedInUser._id,
             content_accomodations: '',
             accomodations: allergyRatings,
             rating: rating,
           };
 
-          dispatch(postAdd(reviewData));
-    
+          //dispatch(postAdd(reviewData));
+          reviewClient.createReview(reviewData);
+
           setRestaurant('');
           setContent('');
           setSelectedAllergy('');
@@ -80,14 +84,12 @@ const AddPostForm = ({restaurantId}) => {
     
         navigate(`/restaurant/${restaurantId}`);
       };
+    
+      const [canPost, setCanPost] = useState(false);
 
-    const canPost = Boolean(restaurant) && Boolean(content) && Boolean(userId)
-
-    const userOptions = users.map(user => (
-        <option key={user._id} value={user._id}>
-            {user.first_name + " " + user.last_name} 
-        </option> 
-    ))
+      useEffect(() => {
+        setCanPost(Boolean(restaurant) && Boolean(content) && Boolean(loggedInUser._id));
+      }, [restaurant, content, loggedInUser]);
 
     const allergyOptions = allergies.map((allergy) => (
         <option key={allergy} value={allergy}>
@@ -105,8 +107,6 @@ const AddPostForm = ({restaurantId}) => {
         setShowAllergyRating(true);
       };
 
-      console.log("Selected Allergies:", selectedAllergies);
-      console.log("Allergy Ratings:", allergyRatings);
 
   return (
     <div>
@@ -116,14 +116,19 @@ const AddPostForm = ({restaurantId}) => {
             type="text"
             id="postRestaurant"
             name="postRestaurant"
-            value={restaurant}
-            onChange={() => {}}>
+            value={restaurant.name}
+            onChange={() => {}}
+            disabled='disabled'>
             </input>
             <label htmlFor="postAuthor">Author:</label>
-            <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
-                <option value=""></option>
-                {userOptions}
-            </select>
+            <input
+              type="text"
+              id="postAuthor"
+              name="postAuthor"
+              value={loggedInUser.first_name + " " + loggedInUser.last_name}
+              onChange={() => {}}
+              disabled='disabled'>
+            </input>
             <label htmlFor='postContent'>Content:</label>
             <textarea
                 id="postContent"

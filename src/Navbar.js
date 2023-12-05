@@ -101,7 +101,6 @@ import Cookies from "js-cookie";
 
 function Navbar({ validUser }) {
   const userType = Cookies.get("userType");
-  console.log("userType...", userType)
   const navigate = useNavigate();
 
   const logOut = async () => {

@@ -8,15 +8,17 @@ function Login() {
   const [fromData, setFormData] = useState({
     email: "",
     password: "",
+    type: "USER",
   });
 
    const LogIn = async (e) => {
     e.preventDefault();
     try {
       const response = await client.login(fromData);
+      
       if (response && response.data) {
-        const { token, user } = response;
-        
+        var { token, user } = response;
+        user = response.data;
         // Check if user is defined before destructuring its properties
         if (user) {
           const { _id, email, type } = user;

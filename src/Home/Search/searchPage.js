@@ -2,19 +2,21 @@ import {React, useState} from "react";
 import {Link} from 'react-router-dom';
 import SearchBar from "./searchBar"
 import {useDispatch, useSelector} from 'react-redux';
-import {setSearchName, setDistance} from './searchReducer'
+import {setSearchName, setDistance, setStateRestaurants} from './searchReducer'
 import {useEffect} from 'react'
 import StarRating from "./starRating"
 import ApiImport from "./ApiImport";
+import * as restaurantClient from "src/store/restaurants";
 import "./styling/search.css";
 
 const SearchPage = () => {
 
     const dispatch = useDispatch();
+    const [restaurants, setRestaurants] =  useState([]);
     const searchName = useSelector((state) => state.search.name);
     const searchResults = useSelector((state) => state.search.results);
     const searchDistance = useSelector((state) => state.search.distance);
-    console.log("Distance:", searchDistance);
+    //console.log("Distance:", searchDistance);
 
     const [userLocation, setUserLocation] = useState(null);
     const [restaurantDistance, setRestaurantDistance] = useState([]);
@@ -28,7 +30,7 @@ const SearchPage = () => {
                     long: position.coords.longitude,
                 };
                 setUserLocation(location);
-                console.log(location);
+                //console.log(location);
             },
             (error) => {
                 console.error('Error getting user location:', error.message)
@@ -59,17 +61,15 @@ const SearchPage = () => {
       function toRadians(degrees) {
         return degrees * (Math.PI / 180);
       }
-
-    useEffect(() =>{
-
+      useEffect(() => {
+        const findAllRestaurants = async () => {
+          const allRestraunts = await restaurantClient.findAllRestaurants();
+          setRestaurants(allRestraunts);
+          dispatch(setStateRestaurants(restaurants));
+        };
         getUserLocation();
-
-        //Add entire restaurant list when there is no search terms
-        dispatch(setSearchName(searchName));
-
-        console.log("Search Results:", searchResults);
-
-    },[]);
+        findAllRestaurants();
+      }, []);
 
     useEffect(() => {
 
@@ -79,7 +79,7 @@ const SearchPage = () => {
                 return {distance};
             });
             dispatch(setDistance(updateResults));
-            console.log( 'Distance:', updateResults);
+            //console.log( 'Distance:', updateResults);
         }
 
 
@@ -105,7 +105,7 @@ const SearchPage = () => {
                 (
                     <ol>
                     
-                        {searchResults.map((result) => (
+                        {searchResults.length>0 && searchResults.map((result) => (
                             <Link key={result.id} to={`/restaurant/${result.id}`}>
                                 <li key={result.id} className="restaurantList"> 
                                     <h3 style={{color: "blue"}}>{result.name}</h3>  

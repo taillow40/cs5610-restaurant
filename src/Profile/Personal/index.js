@@ -1,21 +1,8 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import * as client from "src/Profile/client";
 import * as client from "src/store/api";
 import React, { useRef } from "react";
 import { useState, useEffect } from "react";
-import {
-    addProfile,
-    deleteProfile,
-    updateProfile,
-    setProfile,
-} from "src/Profile/profilesReducer";
-import {
-    addComment,
-    deleteComment,
-    updateComment,
-    setComment,
-} from "src/Comment/commentsReducer";
 import "./index.css";
 import Cookies from "js-cookie";
 import { faK } from "@fortawesome/free-solid-svg-icons";

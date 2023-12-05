@@ -1,44 +1,34 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { selectAllPosts } from './postsSlice'
 import PostAuthor from './postAuthor'
 import Time from './Time'
 import './styling/posts.css'
 import PostStars from './postStars'
 
-const PostsList = ({restaurantId}) => {
-
-    const posts = useSelector(selectAllPosts);
-
-    console.log({posts})
-
-    const orderedPosts = posts.slice().sort((a,b) => b.date.localeCompare(a.date));
-
-    console.log({orderedPosts});
-
-    const restaurantPosts = orderedPosts.filter(posts => posts.restaurant_id == restaurantId);
+const PostsList = ({reviews}) => {
 
 
-    console.log("Restaurant posts:", {restaurantPosts})
+    const orderedReviews = reviews.slice().sort((a,b) => b.date.localeCompare(a.date));
+
 
 
     const hasAccommodations = (accommodations) => {
-      console.log("Accommodations:", accommodations);
+
       const sumOfRatings = Object.values(accommodations).reduce((acc, rating) => acc + rating, 0);
       return sumOfRatings !== 0;
     };
 
-    const renderedPosts = restaurantPosts.map(post => (
-        <div className="restaurantCard" key={post.id}>
-            {console.log("Post", {post})}
-            <h3>{post.restaurant}</h3>
+    const renderedReviews = orderedReviews.map(review => (
+        <div className="restaurantCard" key={review.id}>
+
+            <h3>{review.restaurant}</h3>
             <h3>Overall Rating</h3>
-            <PostStars value={post.rating} onClick={() => {}} />
-            {console.log(`Post Allergies: ${post.accomodations}`)}
-            {hasAccommodations(post.accomodations) && (
+            <PostStars value={review.rating} onClick={() => {}} />
+
+            {hasAccommodations(review.accomodations) && (
             <div>
               <h3>Accommodations</h3>
-                {Object.entries(post.accomodations).map(([allergy, rating]) => (
+                {Object.entries(review.accomodations).map(([allergy, rating]) => (
                 rating !== 0 && (
                 <div key={allergy}>
                   <p>{allergy} Rating:</p>
@@ -48,9 +38,9 @@ const PostsList = ({restaurantId}) => {
               ))}
             </div>
           )}
-            <p>{post.content.substring(0, 100)}</p>
-            <p><PostAuthor userId={post.user_id} />
-            <Time timestamp={post.date}/>
+            <p>{review.content.substring(0, 100)}</p>
+            <p><PostAuthor userId={review.user_id} />
+            <Time timestamp={review.date}/>
             </p>
 
         </div>
@@ -59,7 +49,7 @@ const PostsList = ({restaurantId}) => {
   return (
     <div>
         <h2>Featured Reviews</h2>
-        {renderedPosts}
+        {renderedReviews}
     </div>
   )
 }

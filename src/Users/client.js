@@ -1,7 +1,4 @@
 import axios from "axios";
-// export const BASE_API = process.env.REACT_APP_BACKEND_BASE_URL || 'http://localhost:4000';
-// export const USERS_API = `${BASE_API}/api/users`;
-// const BASE_URL = "http://localhost:4000/api"; // Adjust the URL to match your backend server
 export const BASE_URL = process.env.REACT_APP_BACKEND_BASE_URL;
 export const USERS_API = `${BASE_URL}/api/users`;
 
