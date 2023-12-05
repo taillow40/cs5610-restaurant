@@ -6,6 +6,7 @@ import ReviewsBox from "./ReviewsBox";
 import * as restaurantClient from "src/store/restaurants";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import HeaderBox from "./HeaderBox";
 
 function Restaurant() {
     const { rId } = useParams();
@@ -14,7 +15,7 @@ function Restaurant() {
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
-      const findAllRestaurants = async () => {
+      const findRestaurant = async () => {
         const restaurant = await restaurantClient.findRestaurantById(rId);
         setRestaurant(restaurant);
       };
@@ -22,14 +23,14 @@ function Restaurant() {
         const reviews = await restaurantClient.reviews(rId);
         setReviews(reviews);
       };
-      findAllRestaurants();
+      findRestaurant();
       findAllReviews();
     }, []);
 
     return (
         <div className="flex-down">
             <div className="restaurant-card">
-            {restaurant && <ImageBox restaurant={restaurant} reviews={reviews}/>}
+            {restaurant && <HeaderBox restaurant={restaurant} reviews={reviews}/>}
             </div>
             <div className="restaurant-card">
             {restaurant &&<SummaryBox restaurant={restaurant} reviews={reviews}/>}
