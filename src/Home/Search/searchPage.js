@@ -63,12 +63,13 @@ const SearchPage = () => {
       }
       useEffect(() => {
         const findAllRestaurants = async () => {
-          const allRestraunts = await restaurantClient.findAllRestaurants();
-          setRestaurants(allRestraunts);
-          dispatch(setStateRestaurants(restaurants));
+          const allRestaurants = await restaurantClient.findAllRestaurants();
+          setRestaurants(allRestaurants);
+          dispatch(setStateRestaurants(allRestaurants));
         };
-        getUserLocation();
         findAllRestaurants();
+        getUserLocation();
+        
       }, []);
 
     useEffect(() => {
@@ -106,8 +107,8 @@ const SearchPage = () => {
                     <ol>
                     
                         {searchResults.length>0 && searchResults.map((result) => (
-                            <Link key={result.id} to={`/restaurant/${result.id}`}>
-                                <li key={result.id} className="restaurantList"> 
+                            <Link key={result._id} to={`/restaurant/${result._id}`}>
+                                <li key={result._id} className="restaurantList"> 
                                     <h3 style={{color: "blue"}}>{result.name}</h3>  
                                     <div className="d-flex">
                                     <StarRating rating={avgRating(result.reviews)}/> <p>{result.reviews.length} reviews</p>
