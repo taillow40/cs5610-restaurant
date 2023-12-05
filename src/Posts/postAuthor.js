@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import * as api from "src/store/api";
+import { Link } from "react-router-dom";
 const PostAuthor = ({authorId}) => {
     const [author, setAuthor] = useState({});
 
@@ -12,7 +13,13 @@ const PostAuthor = ({authorId}) => {
     }, []);
 
     
-    return <span>by {author ? author.first_name + " " + author.last_name : "Anonymous"}</span>
+    return <span>
+        by <Link 
+        to={`/profile/${authorId}`}
+        >
+    {author ? author.first_name + " " + author.last_name : "Anonymous"}
+    </Link>
+    </span>
 }
 
 export default PostAuthor;

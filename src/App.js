@@ -16,11 +16,7 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
 import Restaurant from "./Restaurant";
-// import SignIn from "src/Profile/Signin";
-// import CreateProfile from "src/Profile/Signup";
 import ReviewsPage from './Posts';
-import Signup from "src/Profile/Signup"
-import SignIn from "src/Profile/Signin"
 
 function App() {
   const [validUser, setValidUser] = useState(false);

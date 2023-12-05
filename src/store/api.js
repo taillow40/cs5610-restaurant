@@ -87,7 +87,30 @@ export const logout = async () => {
 };
 export const friends = async (id) => {
   try {
-    const response = await request.post(`${USERS_API}/${id}/friends`);
+    const response = await request.get(`${USERS_API}/${id}/friends`);
+    return response?.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const reviews = async (id) => {
+  try {
+    const response = await request.get(`${USERS_API}/${id}/reviews`);
+    return response?.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const addFriend = async (userId, friendId) => {
+  console.log(userId, friendId)
+  const data = {
+    userId: userId,
+    friendId: friendId
+  }
+  try {
+    const response = await request.post(`${USERS_API}/friends`, data);
     return response?.data;
   } catch (error) {
     console.log(error);
