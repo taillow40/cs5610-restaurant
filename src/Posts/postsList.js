@@ -19,7 +19,7 @@ const PostsList = ({reviews}) => {
     };
 
     const renderedReviews = orderedReviews.map(review => (
-        <div className="restaurantCard" key={review.id}>
+        <div className="restaurantCard" key={review._id}>
 
             <h3>{review.restaurant}</h3>
             <h3>Overall Rating</h3>
@@ -39,7 +39,7 @@ const PostsList = ({reviews}) => {
             </div>
           )}
             <p>{review.content.substring(0, 100)}</p>
-            <p><PostAuthor userId={review.user_id} />
+            <p><PostAuthor authorId={review.user_id} />
             <Time timestamp={review.date}/>
             </p>
 
