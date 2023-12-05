@@ -24,7 +24,7 @@ const PostsList = ({reviews}) => {
             <h3>{review.restaurant}</h3>
             <h3>Overall Rating</h3>
             <PostStars value={review.rating} onClick={() => {}} />
-
+            {review.content_accomodations.length > 0 && review.content_accomodations.substring(0, 100)}
             {hasAccommodations(review.accomodations) && (
             <div>
               <h3>Accommodations</h3>
