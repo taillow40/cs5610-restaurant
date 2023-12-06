@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter} from './searchReducer'
+import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter, searchAsync} from './searchReducer'
 
 const SearchBar = () => {
   //const [searchTerm, setSearchTerm] = useState('');
@@ -29,6 +29,10 @@ const SearchBar = () => {
 
   const handleStreetAddressChange = (newStreetAddress) => {
     dispatch(setStreetAddressFilter(newStreetAddress));
+  };
+
+  const handleSearch = () => {
+    dispatch(searchAsync());
   };
 
   const searchStyle = {
@@ -73,6 +77,9 @@ const SearchBar = () => {
       <input style={searchStyle} id="city" type="text" placeholder="Search by City" value={city} onChange={(e) => handleCityChange(e.target.value)} />
       <label htmlFor='address'>Address</label>
       <input style={searchStyle} id="address" type="text" placeholder="Search by Street Address" value={streetAddress} onChange={(e) => handleStreetAddressChange(e.target.value)} />
+      <button style={buttonStyle} onClick={handleSearch}>
+        Search
+      </button>
     </div>
   );
 };
