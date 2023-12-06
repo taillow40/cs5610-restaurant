@@ -1,7 +1,4 @@
-// Include popups based on user preferences
-import db from "./../temp-database"
-function SummaryBox({ rId }) {
-    const restaurantDb = db.restaurants;
+function SummaryBox({ restaurant, reviews }) {
     return (
         <div>
             <h2> For You:</h2>

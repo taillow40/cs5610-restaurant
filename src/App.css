@@ -1,38 +1,51 @@
-.App {
-  text-align: center;
+#navbar {
+	position: sticky;
+	top: 0;
+	z-index: 9999;
+	background-image: url("https://s3-media0.fl.yelpcdn.com/educatorphoto/Sc48sSgQZ2wRgfLharzavg/o.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: auto;
+}
+#navbar .navbar_container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0px 20px;
+	background: linear-gradient(180deg, #000000b3, #0000004d 72.92%, #0000);
+}
+#navbar .navbar_container .nav_left {
+	display: flex;
+	align-items: center;
+	gap: 140px;
+}
+#navbar .navbar_container .nav_right {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+#navbar .navbar_container .buttons {
+	display: flex;
+	gap: 15px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#navbar .navbar_container button {
+	outline: none;
+	border: none;
+	padding: 15px 30px;
+	border-radius: 5px;
+	font-size: 1rem;
+	cursor: pointer;
+	font-weight: 600;
+}
+#navbar .navbar_container .login-btn , #navbar .navbar_container .profile-btn{
+	background-color: transparent;
+	border: 2px solid rgb(203, 195, 195);
+	color: #ffffff;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+#navbar .navbar_container .register-btn, #navbar .navbar_container .logout-btn {
+	background: #5dc380;
+	color: #ffffff;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}

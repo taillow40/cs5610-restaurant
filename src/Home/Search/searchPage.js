@@ -1,18 +1,22 @@
 import {React, useState} from "react";
+import {Link} from 'react-router-dom';
 import SearchBar from "./searchBar"
 import {useDispatch, useSelector} from 'react-redux';
-import {setSearchName, setDistance} from './searchReducer'
+import {setSearchName, setDistance, setStateRestaurants} from './searchReducer'
 import {useEffect} from 'react'
 import StarRating from "./starRating"
+import ApiImport from "./ApiImport";
+import * as restaurantClient from "src/store/restaurants";
 import "./styling/search.css";
 
 const SearchPage = () => {
 
     const dispatch = useDispatch();
+    const [restaurants, setRestaurants] =  useState([]);
     const searchName = useSelector((state) => state.search.name);
     const searchResults = useSelector((state) => state.search.results);
     const searchDistance = useSelector((state) => state.search.distance);
-    console.log("Distance:", searchDistance);
+    //console.log("Distance:", searchDistance);
 
     const [userLocation, setUserLocation] = useState(null);
     const [restaurantDistance, setRestaurantDistance] = useState([]);
@@ -26,7 +30,7 @@ const SearchPage = () => {
                     long: position.coords.longitude,
                 };
                 setUserLocation(location);
-                console.log(location);
+                //console.log(location);
             },
             (error) => {
                 console.error('Error getting user location:', error.message)
@@ -57,17 +61,16 @@ const SearchPage = () => {
       function toRadians(degrees) {
         return degrees * (Math.PI / 180);
       }
-
-    useEffect(() =>{
-
+      useEffect(() => {
+        const findAllRestaurants = async () => {
+          const allRestaurants = await restaurantClient.findAllRestaurants();
+          setRestaurants(allRestaurants);
+          dispatch(setStateRestaurants(allRestaurants));
+        };
+        findAllRestaurants();
         getUserLocation();
-
-        //Add entire restaurant list when there is no search terms
-        dispatch(setSearchName(searchName));
-
-        console.log("Search Results:", searchResults);
-
-    },[]);
+        
+      }, []);
 
     useEffect(() => {
 
@@ -77,7 +80,7 @@ const SearchPage = () => {
                 return {distance};
             });
             dispatch(setDistance(updateResults));
-            console.log( 'Distance:', updateResults);
+            //console.log( 'Distance:', updateResults);
         }
 
 
@@ -92,7 +95,6 @@ const SearchPage = () => {
     }
 
 
-
     return(
         <div className="container">
             <h1> Search </h1>
@@ -100,19 +102,22 @@ const SearchPage = () => {
             <SearchBar/>
             <div>
                 <h3>Search Results:</h3>
-                {searchResults.length === 0 ? (<p> No Results found. </p>) : 
+                {searchResults.length === 0 ? (<ApiImport />) : 
                 (
                     <ol>
-                        {searchResults.map((result) => (
-                            <li key={result.id} className="restaurantList"> 
-                                <h3 style={{color: "blue"}}>{result.name}</h3>  
-                                <div className="d-flex">
-                                <StarRating rating={avgRating(result.reviews)}/> <p>{result.reviews.length} reviews</p>
-                                </div>
-                                <strong>{searchDistance.length === 0 ? "" : Math.round(searchDistance[result.id -1].distance * 10)/10 + " mi away"} </strong>
-                                <h5>{result.streetAddress}, {result.City}, {result.zipCode}</h5>
-                                <h5>{result.cuisine}</h5>
-                            </li>
+                    
+                        {searchResults.length>0 && searchResults.map((result) => (
+                            <Link key={result._id} to={`/restaurant/${result._id}`}>
+                                <li key={result._id} className="restaurantList"> 
+                                    <h3 style={{color: "blue"}}>{result.name}</h3>  
+                                    <div className="d-flex">
+                                    <StarRating rating={avgRating(result.reviews)}/> <p>{result.reviews.length} reviews</p>
+                                    </div>
+                                    <strong>{searchDistance.length === 0 ? "" : Math.round(searchDistance[result.id -1].distance * 10)/10 + " mi away"} </strong>
+                                    <h5>{result.streetAddress}, {result.City}, {result.zipCode}</h5>
+                                    <h5>{result.cuisine}</h5>
+                                </li>
+                            </Link>
                         ))}
                     </ol>
                 )}
