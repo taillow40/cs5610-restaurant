@@ -34,6 +34,7 @@ const PostsList = ({restaurantId}) => {
             <h3>{post.restaurant}</h3>
             <h3>Overall Rating</h3>
             <PostStars value={post.rating} onClick={() => {}} />
+            {post.content_accomodations.length > 0 && post.content_accomodations.substring(0, 100)}
             {console.log(`Post Allergies: ${post.accomodations}`)}
             {hasAccommodations(post.accomodations) && (
             <div>

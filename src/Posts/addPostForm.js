@@ -18,6 +18,7 @@ const AddPostForm = ({restaurantId}) => {
 
     const [restaurant, setRestaurant] = useState('');
     const [content, setContent] = useState('');
+    const [accomContent, setAccomContent] = useState('');
     const [userId, setUserId] = useState('');
     const [rating, setRating] = useState(0);
     const [selectedAllergy, setSelectedAllergy] = useState('');
@@ -40,6 +41,7 @@ const AddPostForm = ({restaurantId}) => {
 
     const onRestaurantChanged = e => setRestaurant(e.target.value)
     const onContentChanged = e => setContent(e.target.value)
+    const onAccomContentChanged = e => setAccomContent(e.target.value)
     const onAuthorChanged = e => setUserId(e.target.value)
     const onRatingChanged = (newRating) => setRating(newRating);
     
@@ -65,7 +67,7 @@ const AddPostForm = ({restaurantId}) => {
             restaurant_id: restaurantId,
             content: content,
             user_id: userId,
-            content_accomodations: '',
+            content_accomodations: accomContent,
             accomodations: allergyRatings,
             rating: rating,
           };
@@ -124,7 +126,7 @@ const AddPostForm = ({restaurantId}) => {
                 <option value=""></option>
                 {userOptions}
             </select>
-            <label htmlFor='postContent'>Content:</label>
+            <label htmlFor='postContent'>Restaurant Review:</label>
             <textarea
                 id="postContent"
                 name="postContent"
@@ -133,6 +135,13 @@ const AddPostForm = ({restaurantId}) => {
                 />
              <label htmlFor="rating">Rating:</label>
              <PostStars value={rating} onClick={setRating} />
+             <label htmlFor='accomContent'>Accommodation Review:</label>
+            <textarea
+                id="accomContent"
+                name="accomContent"
+                value={accomContent}
+                onChange={onAccomContentChanged}
+                />
              <label htmlFor="allergyDropdown">Choose Allergy:</label>
              <select id="allergyDropdown" value={selectedAllergy} onChange={(e) => onAllergyChanged(e.target.value)}>
           <option value=""></option>
@@ -151,6 +160,7 @@ const AddPostForm = ({restaurantId}) => {
             }}>
             Add Allergy Rating
         </button>
+
         {selectedAllergies.map((allergy) => (
             <div key={allergy}>
                 <label>Rate {allergy}:</label>
