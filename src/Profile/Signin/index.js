@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import * as client from "src/store/api";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [error, setError] = useState("");
@@ -8,37 +9,28 @@ function Login() {
   const [fromData, setFormData] = useState({
     email: "",
     password: "",
+    type: "USER", // Default value
   });
+  const navigate = useNavigate();
 
-   const LogIn = async (e) => {
+  const LogIn = async (e) => {
     e.preventDefault();
     try {
       const response = await client.login(fromData);
-      if (response && response.data) {
-        const { token, user } = response;
-        
-        // Check if user is defined before destructuring its properties
-        if (user) {
-          const { _id, email, type } = user;
-          setSuccessMsg("Successfully logged in");
-          Cookies.set("user", response.data);
-          Cookies.set("userType", type);
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 3000);
-        } else {
-          setError("User information not available");
+      if (response) {
+        setSuccessMsg("Successfully logged in");
+        Cookies.set("user", response?.data);
+        if (response.success) {
+          navigate("/");
+          window.location.reload();
         }
-      } else {
-        setError("Invalid response format");
       }
     } catch (err) {
       console.log(err);
-      setError(err?.response ? err?.response?.data?.message : "Internal Server Error");
+      setError(err.response.data.message);
     }
   };
-  
-  
+
   return (
     <div className="auth-container">
       <h1>Log in</h1>

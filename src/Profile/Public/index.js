@@ -1,7 +1,20 @@
 import React from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import * as client from "src/store/api";
+import { useSelector, useDispatch } from "react-redux";
+import * as client from "src/Profile/client";
 import { useState, useEffect } from "react";
+import {
+    addProfile,
+    deleteProfile,
+    updateProfile,
+    setProfile,
+} from "src/Profile/profilesReducer";
+import {
+    addComment,
+    deleteComment,
+    updateComment,
+    setComment,
+} from "src/Comment/commentsReducer";
 import "./index.css";
 function Public() {
     const { profileId } = useParams();

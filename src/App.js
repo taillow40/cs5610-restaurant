@@ -1,56 +1,66 @@
-import './App.css';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import {
+  BrowserRouter,
+  HashRouter,
+  Link,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import Personal from "./Profile/Personal";
 import Profile from "./Profile/Public";
 import EditProfile from "src/Profile/Edit";
-import SearchPage from './Home/Search/searchPage';
-import Login from "src/Login";
+import SearchPage from "./Home/Search/searchPage";
+import CreateProfile from "../src/Profile/Signup";
+import SignIn from "../src/Profile/Signin/index";
 import store from "./store";
-import * as client from "src/store/api";
 import { Provider } from "react-redux";
-import Home from './Home';
-import Navbar from "./Navbar";
-import Register from 'src/Register';
+import Home from "./Home";
+import Restaurant from "./Restaurant";
+import ReviewsPage from "./Posts";
+import Navbar from "./components/Navbar";
 import Cookies from "js-cookie";
-import { useEffect, useState } from 'react';
-import UserTable from './Users/table';
+import { useEffect, useState } from "react";
+import * as client from "src/store/api";
+import AuthProtected from "./AuthGuard/PrivateRoute";
 
 function App() {
   const [validUser, setValidUser] = useState(false);
+  const cookie = Cookies.get("user");
 
-  const cookie = Cookies.get('user');
-
-  console.log("cookieeeeeeeee", cookie)
-
-  const checkValidToken = () => {
-    const response = client.checkToken(cookie);
-    if(response){
-      setValidUser(true);
-
-    }
-  }
   useEffect(() => {
     if (cookie) {
+      const checkValidToken = () => {
+        const response = client.checkToken(cookie);
+        if (response) {
+          setValidUser(true);
+        }
+      };
       checkValidToken();
     }
-  }, [])
-
+  }, [cookie]);
   return (
     <BrowserRouter>
       <Provider store={store}>
-          <Navbar validUser={validUser} />
-          <Routes>
-            <Route path="/" exact element={<Home />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/profile" element={<Personal />} />
-            <Route path="/admin" element={<UserTable />} />
-            <Route path="/profile/:profileId" element={<Profile />} />
-            <Route path="/profile/edit" element={<EditProfile />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-
-            
-          </Routes>
+        <Navbar validUser={validUser} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/profile" element={<Personal />} />
+          <Route path="/profile/:profileId" element={<Profile />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
+          <Route path="/restaurant/:rId" element={<Restaurant />} />
+          <Route path="/signup" element={<CreateProfile />} />
+          <Route path="/login" element={<SignIn />} />
+          <Route
+            path="/restaurant/:rId/review"
+            element={
+              <AuthProtected>
+                <ReviewsPage />
+              </AuthProtected>
+            }
+          />
+        </Routes>
       </Provider>
     </BrowserRouter>
   );

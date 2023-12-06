@@ -1,12 +1,8 @@
 import {createSlice} from "@reduxjs/toolkit"
 import {sub} from 'date-fns';
+import db from "src/Database";
 
-const initialState = [
-    {id: '1', restaurant: 'Restaurant A', content: "The food here tasted great. I would recommend getting the pasta dinner.", 
-    date: sub(new Date, {minutes: 10}).toISOString()},
-    {id: '2', restaurant: 'Restaurant B', content: "I was really excited to visit an authentic chinese restaurant. The atmosphere was very charming.",
-    date: sub(new Date, {minutes: 5}).toISOString()}
-]
+const initialState = db.reviews;
 
 const postSlice = createSlice({
     name: 'posts',
