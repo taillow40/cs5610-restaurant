@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as client from "src/store/api";
-import "./index.css";
 
 function Signup() {
   const [error, setError] = useState("");
@@ -12,6 +11,7 @@ function Signup() {
     last_name: "",
     phone_number: "",
     password: "",
+    cuisine: "",
     type: "USER", // Default value
   });
 
@@ -19,18 +19,24 @@ function Signup() {
 
   const register = async (e) => {
     e.preventDefault();
+    const data = {
+      ...fromData,
+      cuisine: [fromData.cuisine],
+    };
+
     try {
-      console.log("formmmmmmm",  fromData)
-     await client.register(fromData);
-      setSuccessMsg('Successfully signed up')
-      setTimeout(() => {
-        navigate("/login");
-      }, 3000);
+      const response = await client.register(data);
+      if (response?.success) {
+        setSuccessMsg("Successfully signed up");
+        setTimeout(() => {
+          navigate("/login");
+        }, 750);
+      }
     } catch (err) {
-      setError(err?.response?.data?.message);
+      setError(err.response.data.message);
     }
   };
-  
+
   return (
     <div className="auth-container">
       <h1>Register</h1>
@@ -44,7 +50,9 @@ function Signup() {
             required
             type="email"
             value={fromData.email}
-            onChange={(e) => setFormData({ ...fromData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...fromData, email: e.target.value })
+            }
           />
         </div>
 
@@ -54,7 +62,9 @@ function Signup() {
             required
             type="text"
             value={fromData.first_name}
-            onChange={(e) => setFormData({ ...fromData, first_name: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...fromData, first_name: e.target.value })
+            }
           />
         </div>
 
@@ -64,7 +74,9 @@ function Signup() {
             required
             type="text"
             value={fromData.last_name}
-            onChange={(e) => setFormData({ ...fromData, last_name: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...fromData, last_name: e.target.value })
+            }
           />
         </div>
 
@@ -74,7 +86,9 @@ function Signup() {
             required
             type="tel"
             value={fromData.phone_number}
-            onChange={(e) => setFormData({ ...fromData, phone_number: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...fromData, phone_number: e.target.value })
+            }
           />
         </div>
 
@@ -84,8 +98,34 @@ function Signup() {
             required
             type="password"
             value={fromData.password}
-            onChange={(e) => setFormData({ ...fromData, password: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...fromData, password: e.target.value })
+            }
           />
+        </div>
+        <div className="form-group">
+          <label>Cuisine:</label>
+          <select
+            value={fromData.cuisine}
+            onChange={(e) =>
+              setFormData({ ...fromData, cuisine: e.target.value })
+            }
+          >
+            <option value="">Choose your favourite cuisine</option>
+            <option value="Italian">Italian</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Mexican">Mexican</option>
+            <option value="American">American</option>
+            <option value="Indian">Indian</option>
+            <option value="Mediterranean">Mediterranean</option>
+            <option value="Vegetarian">Vegetarian</option>
+            <option value="Barbecue">Barbecue</option>
+            <option value="Seafood">Seafood</option>
+            <option value="Desserts">Desserts</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="French">French</option>
+            <option value="Snacks">Snacks</option>
+          </select>
         </div>
 
         <div className="form-group">

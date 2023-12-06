@@ -5,8 +5,6 @@ import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import "./index.css";
 import Cookies from "js-cookie";
-import { faK } from "@fortawesome/free-solid-svg-icons";
-import { user } from "fontawesome";
 
 function Personal() {
   const cookieToken = Cookies.get("user");
