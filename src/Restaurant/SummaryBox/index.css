@@ -1,0 +1,11 @@
+.foryou-wrapper {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.foryou {
+    display: inline-flex;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 2rem;
+}

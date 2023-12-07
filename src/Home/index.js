@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import RestaurantCard from "./Home_Components/restaurantCard";
-import restaurantData from "../Database/restaurants.json";
 //import PostsList from "./Posts/postsList";
 //import AddPostForm from "./Posts/addPostForm";
 import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import * as client from "src/store/api";
+import * as restaurantAPI from "src/store/restaurants";
 import StarRating from "./Search/starRating";
 import { useSelector } from "react-redux";
 
@@ -27,10 +26,17 @@ function Home() {
     }
   }, [cookie]);
 
+  
+  const [restaurants, setRestaurants] = useState([]);
   useEffect(() => {
     const fetchProfile = async () => {
       const fetchedProfile = await client.account();
       if (fetchedProfile) {
+        const fetchedRestaurants =
+          await restaurantAPI.findAllRestaurantsByCousine(
+            fetchedProfile.data.cuisine
+          );
+        setRestaurants(fetchedRestaurants || []);
         setProfile(fetchedProfile?.data);
       }
     };
@@ -43,10 +49,9 @@ function Home() {
     backgroundColor: "#36454F",
     height: "60vh",
   };
-  const restaurants = restaurantData;
-  console.log(profile?.cuisine[0]);
 
-  // useEffect()
+  // console.log(profile?.cuisine[0]);
+
   const avgRating = (rating) => {
     let sum = 0;
     for (var i = 0; i < rating.length; i++) {
@@ -60,7 +65,6 @@ function Home() {
   return (
     <>
       <div style={homeStyle}>
-        <h1>Welcome to Restaurant Dev branch Justin's Version</h1>
         <Link to="/search">
           <button className="btn btn-primary">Search</button>
         </Link>

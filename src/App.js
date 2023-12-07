@@ -13,6 +13,7 @@ import EditProfile from "src/Profile/Edit";
 import SearchPage from "./Home/Search/searchPage";
 import CreateProfile from "../src/Profile/Signup";
 import SignIn from "../src/Profile/Signin/index";
+import AdminProfile from "../src/AdminProfile";
 import store from "./store";
 import { Provider } from "react-redux";
 import Home from "./Home";
@@ -47,6 +48,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/profile" element={<Personal />} />
+          <Route path="/admin" element={<AdminProfile />} />
           <Route path="/profile/:profileId" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/restaurant/:rId" element={<Restaurant />} />

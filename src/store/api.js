@@ -1,7 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const BASE_API = process.env.REACT_APP_BACKEND_BASE_URL || 'http://localhost:4000';
+export const BASE_API =
+  process.env.REACT_APP_BACKEND_BASE_URL || "http://localhost:4000";
 export const USERS_API = `${BASE_API}/api/users`;
 
 const request = axios.create({
@@ -12,7 +13,7 @@ const request = axios.create({
 });
 
 
-export const login = async (credentials) => {
+export const signin = async (credentials) => {
   const response = await request.post(`${USERS_API}/signin`, credentials);
   return response?.data;
 };

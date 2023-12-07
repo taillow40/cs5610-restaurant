@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as client from "src/store/api";
 import Cookies from "js-cookie";
-import axios from "axios";
 import logo from "../assets/logo.jpeg";
 
 function Navbar({ validUser }) {
@@ -62,6 +61,14 @@ function Navbar({ validUser }) {
                   }}
                 >
                   Profile
+                </button>
+                <button
+                  className="profile-btn"
+                  onClick={() => {
+                    navigate("/admin");
+                  }}
+                >
+                  Admin
                 </button>
                 <button className="logout-btn" onClick={logOut}>
                   Logout

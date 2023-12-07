@@ -14,7 +14,7 @@ const AddPostForm = ({restaurant}) => {
 
     const [loggedInUser, setLoggedInUser] = useState({});
 
-
+  console.log(restaurant);
     const [content, setContent] = useState('');
     const [accomContent, setAccomContent] = useState('');
     const [rating, setRating] = useState(0);
@@ -103,7 +103,7 @@ const AddPostForm = ({restaurant}) => {
 
   return (
     <div>
-        <form className="postForm">
+        { restaurant && <form className="postForm">
             <label htmlFor='postRestaurant'>Restaurant:</label>
             <input
             type="text"
@@ -172,7 +172,7 @@ const AddPostForm = ({restaurant}) => {
             ))}
             <button className="btn btn-primary postButton" type="button"
             onClick={onPostReview} disabled={!canPost}>Post Review</button>
-        </form>
+        </form> }
     </div>
   )
 }

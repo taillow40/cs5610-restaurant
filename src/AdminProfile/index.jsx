@@ -1,13 +1,14 @@
+import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import * as client from "src/store/api";
-import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import "./index.css";
 import Cookies from "js-cookie";
 
-function Personal() {
+function AdminProfile() {
   const cookieToken = Cookies.get("user");
   const [profile, setProfile] = useState(null);
+  const [allUser, setAllUser] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +23,17 @@ function Personal() {
     fetchProfile();
   }, [cookieToken, navigate]);
 
-  
+  useEffect(() => {
+    const findAllUsers = async () => {
+      const findAllUser = await client.findAllUsers();
+      if (findAllUser) {
+        setAllUser(findAllUser);
+      } else {
+        navigate("/login");
+      }
+    };
+    findAllUsers();
+  }, [navigate]);
 
   const [p, setP] = useState({
     email: "",
@@ -33,6 +44,7 @@ function Personal() {
     type: "USER",
   });
 
+  const addSaveRef = useRef(null);
   const addModalRef = useRef(null);
 
   const [up, setUp] = useState({
@@ -43,43 +55,143 @@ function Personal() {
     password: "",
     type: "USER",
   });
+  const updateSaveRef = useRef(null);
   const updateModalRef = useRef(null);
+  const updateAUser = async (p) => {
+    const user = await client.updateUser(p);
+    if (user) {
+      if (updateModalRef.current) {
+        const findAllUser = await client.findAllUsers();
+        if (findAllUser) {
+          setAllUser(findAllUser);
+          const saveButton = updateSaveRef.current;
 
+          // Add data-bs-dismiss attribute to enable Bootstrap dismissal behavior
+          saveButton.setAttribute("data-bs-dismiss", "modal");
 
+          // Simulate a click on the button to trigger dismissal
+          saveButton.click();
+        }
+      }
+    }
+  };
+
+  const handleDel = async (user) => {
+    const del = await client.deleteUser(user);
+    if (del) {
+      const findAllUser = await client.findAllUsers();
+      if (findAllUser) {
+        setAllUser(findAllUser);
+      }
+    }
+  };
+  const createAUser = async (p) => {
+    const user = await client.createUser(p);
+    if (user) {
+      if (addModalRef.current) {
+        const findAllUser = await client.findAllUsers();
+        if (findAllUser) {
+          setAllUser(findAllUser);
+          const saveButton = addSaveRef.current;
+
+          // Add data-bs-dismiss attribute to enable Bootstrap dismissal behavior
+          saveButton.setAttribute("data-bs-dismiss", "modal");
+
+          // Simulate a click on the button to trigger dismissal
+          saveButton.click();
+        }
+      }
+    }
+  };
   return (
     <div className="profile">
-      {profile && (
-        <div>
-          <h1>Personal Profile</h1>
-          <h3>
-            Welcome, {profile?.first_name} {profile?.last_name}
-          </h3>
-          {profile && (
-            <div className="profile-grid">
-              <span className="profile__first-name">
-                first_name: {profile.first_name}
-              </span>
-              <span className="profile__last-name">
-                last_name: {profile.last_name}
-              </span>
-              <span className="profile__phone">email: {profile.email}</span>
-              <span className="profile__email">
-                phone_number: {profile.phone_number}
-              </span>
-              <span className="profile__email">user_type: {profile.type}</span>
-              <span className="profile__email">
-                Favorite Cousine: {profile.cuisine}
-              </span>
+      {profile?.type === "ADMIN" ? (
+        <div className="p-3">
+          <div className="d-flex justify-content-between my-4">
+            <h2>Users info's</h2>
+            <button
+              className="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addModal"
+            >
+              Add User
+            </button>
+          </div>
+          <table className="table">
+            <thead className="thead-light">
+              <tr>
+                <th
+                  scope="col"
+                  className=""
+                  style={{
+                    width: "35%",
+                  }}
+                >
+                  Email
+                </th>
+                <th scope="col">Password</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">User Type</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allUser &&
+                allUser.map((user, i) => {
+                  return (
+                    <tr className="" key={i}>
+                      <td>{user?.email}</td>
+                      <td>
+                        {user?.password?.split("").map((s) => (
+                          <span>*</span>
+                        ))}
+                      </td>
+                      <td>{user.first_name}</td>
+                      <td>{user.last_name}</td>
+                      <td>{user.phone_number}</td>
+                      <td>{user.type}</td>
+                      <td className="row  g-4">
+                        <button
+                          style={{
+                            border: "none",
+                            background: "none",
+                            margin: "0",
+                            fontSize: "20px",
+                          }}
+                          onClick={() => {
+                            setUp(user);
+                          }}
+                          className="col "
+                          data-bs-toggle="modal"
+                          data-bs-target="#updateModal"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          style={{
+                            border: "none",
+                            background: "none",
+                            margin: "0",
+                            fontSize: "20px",
+                          }}
+                          className="col cursor-pointer"
+                          onClick={() => handleDel(user)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
 
-              <button
-                className="profile__edit"
-                onClick={() => navigate(`/profile/edit`)}
-              >
-                Edit
-              </button>
-            </div>
-          )}
+          {/* resturant */}
         </div>
+      ) : (
+        <p>You don't have permission to view this page</p>
       )}
       {/* user */}
       <div
@@ -207,6 +319,7 @@ function Personal() {
                     <option value="ADMIN">Admin</option>
                   </select>
                 </div>
+
                 {/* <div></div> */}
 
                 <div
@@ -217,6 +330,25 @@ function Personal() {
                     marginTop: "30px",
                   }}
                 >
+                  <button
+                    className="edit__save w-75"
+                    onClick={() => {
+                      createAUser(p);
+                    }}
+                    ref={addSaveRef}
+                  >
+                    Add User
+                  </button>
+
+                  <button
+                    className="edit__cancel w-75"
+                    onClick={() => {
+                      navigate(`/profile`);
+                    }}
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
@@ -350,6 +482,29 @@ function Personal() {
                   </select>
                 </div>
                 {/* <div></div> */}
+
+                <div
+                  className=""
+                  style={{
+                    display: " grid",
+
+                    marginTop: "30px",
+                  }}
+                >
+                  <button
+                    className="edit__save w-75"
+                    onClick={() => {
+                      updateAUser(up);
+                    }}
+                    ref={updateSaveRef}
+                  >
+                    Update User
+                  </button>
+
+                  <button className="edit__cancel w-75" data-bs-dismiss="modal">
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -358,4 +513,4 @@ function Personal() {
     </div>
   );
 }
-export default Personal;
+export default AdminProfile;

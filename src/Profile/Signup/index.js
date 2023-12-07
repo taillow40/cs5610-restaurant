@@ -33,8 +33,18 @@ function Signup() {
         }, 750);
       }
     } catch (err) {
-      setError(err.response.data.message);
+      setError(err?.response?.data?.message || "An Error Occurred");
     }
+  };
+
+  const getUserLocation = async (e) => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      setFormData((p) => {
+        return { ...p, Long: longitude, Lat: latitude };
+      });
+    });
   };
 
   return (
@@ -91,6 +101,50 @@ function Signup() {
             }
           />
         </div>
+
+        {fromData.type === "RESTAURANT" && (
+          <React.Fragment>
+            <div className="form-group">
+              <label>Location:</label>
+              <button type="button" onClick={getUserLocation}>
+                Get Location
+              </button>
+            </div>
+            <div className="form-group">
+              <label>City:</label>
+              <input
+                required
+                type="text"
+                value={fromData?.City}
+                onChange={(e) =>
+                  setFormData({ ...fromData, City: e.target.value })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label>Zip Code:</label>
+              <input
+                required
+                type="text"
+                value={fromData?.zipCode}
+                onChange={(e) =>
+                  setFormData({ ...fromData, zipCode: e.target.value })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label>Street Address:</label>
+              <input
+                required
+                type="text"
+                value={fromData?.streetAddress}
+                onChange={(e) =>
+                  setFormData({ ...fromData, streetAddress: e.target.value })
+                }
+              />
+            </div>
+          </React.Fragment>
+        )}
 
         <div className="form-group">
           <label>Password:</label>

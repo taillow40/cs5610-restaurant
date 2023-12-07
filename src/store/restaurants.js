@@ -21,6 +21,15 @@ export const findAllRestaurants = async () => {
   }
 
 };
+export const findAllRestaurantsByCousine = async (cousines) => {
+  try {
+    const response = await axios.post(`${RESTAURANTS_API}/restaurantsByCousine`, cousines);
+    return response?.data;
+  } catch (error) {
+    console.log("error in cuisine", error);
+  }
+
+};
 export const createRestaurant = async (restaurant) => {
   try {
     const response = await axios.post(`${RESTAURANTS_API}`, restaurant);

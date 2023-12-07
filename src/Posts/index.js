@@ -21,7 +21,7 @@ const ReviewsPage = () => {
     return (
         <div>
             <h1>Leave Your Review for {restaurant.name} </h1>
-            <AddPostForm rest={restaurant}/>
+            <AddPostForm restaurant={restaurant}/>
         </div>
     );
 };

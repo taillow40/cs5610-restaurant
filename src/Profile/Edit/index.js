@@ -50,21 +50,21 @@
 // export default Edit;
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import "./index.css";
 import * as client from "src/store/api";
 
 function Edit() {
   const navigate = useNavigate();
 
-  const updateUser = async (user) => {
-    const u = await client.updateUser(user);
-    if (u?.modifiedCount) {
-      navigate(`/profile`);
-    }
+  const updateUser = async () => {
+    try {
+      const u = await client.updateUser(p);
+      if (u?.modifiedCount) {
+        navigate(`/profile`);
+      }
+    } catch (error) {}
   };
 
-  const dispatch = useDispatch();
   const [p, setP] = useState({
     email: "",
     first_name: "",
@@ -72,6 +72,7 @@ function Edit() {
     phone_number: "",
     password: "",
     type: "USER",
+    cuisine: "",
   });
 
   useEffect(() => {
@@ -165,6 +166,31 @@ function Edit() {
             <option value="ADMIN">Admin</option>
           </select>
         </div>
+
+        <div className="mt-5">
+          <label>Cuisine:</label>
+          <select
+            value={p.cuisine}
+            onChange={(e) => {
+              console.log(e.target.value);
+              setP({ ...p, cuisine: e.target.value })}}
+          >
+            <option value="">Choose your favourite cuisine</option>
+            <option value="Italian">Italian</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Mexican">Mexican</option>
+            <option value="American">American</option>
+            <option value="Indian">Indian</option>
+            <option value="Mediterranean">Mediterranean</option>
+            <option value="Vegetarian">Vegetarian</option>
+            <option value="Barbecue">Barbecue</option>
+            <option value="Seafood">Seafood</option>
+            <option value="Desserts">Desserts</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="French">French</option>
+            <option value="Snacks">Snacks</option>
+          </select>
+        </div>
         <div></div>
 
         <div
@@ -178,7 +204,7 @@ function Edit() {
           <button
             className="edit__save mt-5 "
             onClick={() => {
-              updateUser(p);
+              updateUser();
             }}
           >
             Save
