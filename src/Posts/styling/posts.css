@@ -1,0 +1,19 @@
+.restaurantCard {
+    width: 300px;
+    height: auto;
+    border: 1px solid black;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.postForm{
+    display: flex;
+    flex-direction: column;
+}
+
+.postButton{
+
+    margin-top: 20px;
+
+}

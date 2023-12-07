@@ -1,0 +1,87 @@
+.profile-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 0.5fr;
+    grid-template-rows: 50px 50px 50px;
+    margin: 20px;
+}
+
+.profile__first-name {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.profile__last-name {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.profile__phone {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.profile__some {
+    grid-column: 1 / 3;
+    grid-row: 3 / 3;
+}
+
+.profile__edit {
+    grid-column: 2/3;
+    grid-row: 3/4;
+}
+
+.profile {
+    color: #36454F;
+}
+
+.profile__edit {
+    background-color:#5dc380;
+    width: 100px;
+    height: 50px;
+    border: 1px solid #36454F;
+    border-radius: 5px;
+}
+
+.profile__friends {
+    grid-column: 3 / 4;
+    grid-row: 1 / n-1;
+    border: 1px solid #36454F;
+    border-radius: 5px;
+    color: #36454F;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+    
+}
+
+.profile__friends__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile__friends__text {
+    text-decoration: none;
+    color: #36454F;
+    cursor: pointer;
+}
+
+.profile__comments {
+    grid-column: 1 / n;
+    grid-row: n-1 / n;
+    border: 1px solid #36454F;
+    border-radius: 5px;
+    color: #36454F;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.profile__comments__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+}

@@ -1,0 +1,37 @@
+.flex-down {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-right {
+    display: flex;
+    flex-direction: row; 
+}
+
+.restaurant-card {
+    background-color: #5dc380;
+    text-align: left;
+    margin:50px;
+    padding:20px;
+    border-radius:10px;
+    height: 600px;
+    object-fit: cover;
+}
+
+.image-container {
+    /* position: absolute;*/
+    object-fit: cover;
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius:10px;
+}
+
+.text-overlay {
+    position: absolute;
+    bottom: 80px;
+    left: 80px;
+    padding: 50px;
+}

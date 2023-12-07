@@ -1,0 +1,29 @@
+.edit{
+    color: #36454F;
+}
+
+.edit__grid {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50px 50px;
+}
+
+.edit__save {
+    grid-column: 1/2;
+    grid-row: n-1/n;
+    background-color:#5dc380;
+    width: 100px;
+    height: 50px;
+    border: 1px solid #36454F;
+    border-radius: 5px;
+}
+
+.edit__cancel {
+    grid-column: 2/3;
+    grid-row: n-1/n;
+    background-color:#caad73;
+    width: 100px;
+    height: 50px;
+    border: 1px solid #36454F;
+    border-radius: 5px;
+}
