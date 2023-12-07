@@ -103,15 +103,6 @@ const SearchPage = () => {
 
     }, [userLocation, searchLoading, dispatch]);
 
-    const avgRating = (rating) => {
-        let sum = 0;
-        for (var i = 0; i < rating.length; i++){
-            sum += rating[i];
-        }
-        return (sum / rating.length);
-    }
-
-
     return(
         <div className="container">
             <h1> Search </h1>
@@ -129,7 +120,7 @@ const SearchPage = () => {
                                 <li key={result._id} className="restaurantList"> 
                                     <h3 style={{color: "blue"}}>{result.name}</h3>  
                                     <div className="d-flex">
-                                    <StarRating rating={avgRating(result.reviews)}/> <p>{result.reviews.length} reviews</p>
+                                    <StarRating rating={result.averageRating}/> <p>{result.reviews.length} reviews</p>
                                     </div>
                                     <strong>{searchDistance.length === 0 ? "" : Math.round(searchDistance[index] * 10)/10 + " mi away"} </strong>
                                     <h5>{result.streetAddress}, {result.City}, {result.zipCode}</h5>
