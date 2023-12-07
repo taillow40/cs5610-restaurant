@@ -23,8 +23,8 @@ const ReviewsPage = () => {
 
     return (
         <div>
-            <h1>Leave Your Review for {} </h1>
-            <AddPostForm restaurantId={rId}/>
+            <h1>Leave Your Review for {restaurant.name} </h1>
+            <AddPostForm rest={restaurant}/>
         </div>
     );
 };

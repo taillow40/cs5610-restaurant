@@ -19,12 +19,29 @@ import "./index.css";
 function Personal() {
     const [profile, setProfile] = useState(null);
     const [friends, setFriends] = useState([]);
+
     const fetchProfile = async () => {
-        const fetchedProfile = await client.account();
-        setProfile(fetchedProfile);
-        fetchFriends(fetchedProfile._id);
-        
-    }
+        try {
+          const token = localStorage.getItem("token");
+          console.log("Token in profile", token);
+          if (!token) {
+            // Handle the case where the token is missing
+            console.error("Token is missing");
+            return;
+          }
+    
+          // Include the token in the request headers
+          const headers = { Authorization: `${token}` };
+          const fetchedProfile = await client.account(headers);
+    
+          setProfile(fetchedProfile);
+          console.log("Fetched Profile:", fetchedProfile);
+          //fetchFriends(fetchedProfile._id);
+        } catch (error) {
+          // Handle errors, e.g., token validation failure or network issues
+          console.error("Error fetching profile:", error);
+        }
+      };
     
     const fetchFriends = async (profileId) => {
         const friends = await client.friends(profileId);
@@ -45,10 +62,10 @@ function Personal() {
         <div className="profile">
             <h1>Personal Profile</h1>
             {profile && <div className="profile-grid">
-                <span className="profile__first-name">{profile.first_name}</span>
-                <span className="profile__last-name">{profile.last_name}</span>
-                <span className="profile__phone">{profile.email}</span>
-                <span className="profile__email">{profile.phone}</span>
+                <span className="profile__first-name">{profile.data.first_name}</span>
+                <span className="profile__last-name">{profile.data.last_name}</span>
+                <span className="profile__phone">{profile.data.email}</span>
+                <span className="profile__email">{profile.data.phone}</span>
                 <div className="profile__friends">
                     <h2>Friends</h2>
                     <ul className="profile__friends__list">

@@ -5,8 +5,22 @@ function Signin() {
   const [credentials, setCredentials] = useState({ username: "", password: "" });
   const navigate = useNavigate();
   const signin = async () => {
-    await client.signin(credentials);
-    navigate("/profile");
+    try{ 
+      console.log("Credentials:", credentials);
+      const response = await client.signin(credentials);
+      if (response.success) {
+        const token = response.data;
+        localStorage.setItem("token", token);
+        navigate("/profile");
+      }
+      else{
+        console.error("Login failed:", response.message);
+      }
+    }
+    catch (error){
+      console.log("Error during login:", error);
+    }
+
   };
   return (
     <div>

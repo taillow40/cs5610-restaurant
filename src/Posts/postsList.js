@@ -6,20 +6,20 @@ import Time from './Time'
 import './styling/posts.css'
 import PostStars from './postStars'
 
-const PostsList = ({restaurantId}) => {
+const PostsList = ({reviews}) => {
 
-    const posts = useSelector(selectAllPosts);
+    //const posts = useSelector(selectAllPosts);
 
-    console.log({posts})
+    console.log({reviews})
 
-    const orderedPosts = posts.slice().sort((a,b) => b.date.localeCompare(a.date));
+    const orderedReviews = reviews.slice().sort((a,b) => b.date.localeCompare(a.date));
 
-    console.log({orderedPosts});
+    console.log({orderedReviews});
 
-    const restaurantPosts = orderedPosts.filter(posts => posts.restaurant_id == restaurantId);
+    //const restaurantPosts = orderedPosts.filter(posts => posts.restaurant_id == restaurantId);
 
 
-    console.log("Restaurant posts:", {restaurantPosts})
+    //console.log("Restaurant posts:", {restaurantPosts})
 
 
     const hasAccommodations = (accommodations) => {
@@ -28,8 +28,8 @@ const PostsList = ({restaurantId}) => {
       return sumOfRatings !== 0;
     };
 
-    const renderedPosts = restaurantPosts.map(post => (
-        <div className="restaurantCard" key={post.id}>
+    const renderedPosts = orderedReviews.map(post => (
+        <div className="restaurantCard" key={post._id}>
             {console.log("Post", {post})}
             <h3>{post.restaurant}</h3>
             <h3>Overall Rating</h3>

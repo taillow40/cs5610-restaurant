@@ -18,6 +18,7 @@ const searchSlice = createSlice({
     results: [],
     loading: false,
     error: null,
+    sortByRating: false
   },
   reducers: {
     setSearchName: (state, action) => {
@@ -66,6 +67,10 @@ const searchSlice = createSlice({
       state.results = [];
       state.error = true;
     },
+    sortByRating: (state) => {
+        state.results.sort((a,b) => b.averageRating - a.averageRating);
+        state.sortByRating = true;
+    }
   },
 });
 
@@ -127,6 +132,7 @@ export const searchAsync = () => async (dispatch, getState) => {
     setSearchLoading,
     setSearchSuccess,
     setSearchError,
+    sortByRating
   } = searchSlice.actions;
 
   export default searchSlice.reducer;

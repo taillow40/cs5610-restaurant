@@ -1,23 +1,23 @@
 // Use reviews to get dietary information
-import db from "./../temp-database"
 import React from "react";
 import { Link } from "react-router-dom";
 import PostsList from "src/Posts/postsList";
 
 // Will need to match restaurants and reviews by ID
-function ReviewsBox({ rId }) {
+function ReviewsBox({ restaurant, reviews }) {
+    console.log(reviews)
     return (
         <div>
             <h2>
                 Reviews
             </h2>
 
-            <Link to={`/restaurant/${rId}/review`}>
+            <Link to={`/restaurant/${restaurant._id}/review`}>
                 <button>Write a review</button>
             </Link>
 
             <hr/>
-            <PostsList restaurantId={rId}/>
+            <PostsList restaurant={restaurant} reviews={reviews}/>
         </div>
     )
 }

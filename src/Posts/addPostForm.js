@@ -6,17 +6,24 @@ import { postAdd } from './postsSlice';
 import { selectAllUsers } from '../Home/Users/usersSlice';
 import {useNavigate} from 'react-router-dom';
 import './styling/posts.css'
+import * as client from "src/store/api";
+import * as profileClient from "src/Profile/client";
 import PostStars from "./postStars"
+import * as restaurantClient from "src/store/restaurants";
+import * as reviewClient from "src/store/reviews";
+import { useParams } from 'react-router-dom';
 
 import db from "src/Database";
 
-const AddPostForm = ({restaurantId}) => {
+const AddPostForm = ({rest}) => {
 
-    const restaurants = db.restaurants;
+    //const restaurants = db.restaurants;
 
-    console.log("Restaurants: ", {restaurants});
+    //console.log("Restaurants: ", {restaurants});
 
-    const [restaurant, setRestaurant] = useState('');
+    const [loggedInUser, setLoggedInUser] = useState({});
+
+    const [restaurant, setRestaurant] = useState({rest});
     const [content, setContent] = useState('');
     const [accomContent, setAccomContent] = useState('');
     const [userId, setUserId] = useState('');
@@ -49,9 +56,32 @@ const AddPostForm = ({restaurantId}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    console.log("Restaurant ID: ", restaurantId)
+    console.log("Restaurant: ", rest);
+    console.log("Restaurant ID: ", restaurant._id)
+
 
     useEffect(() => {
+      const findUser = async () => {
+        const token = localStorage.getItem("token");
+        const headers = { Authorization: `${token}` };
+        console.log("TOKEN IN ADD REVIEW", token);
+        const fetchedProfile = await profileClient.account(headers);
+        console.log("Fetched profile in add review", fetchedProfile);
+        if (fetchedProfile) {
+          console.log("Fetched User Data", fetchedProfile?.data);
+          setLoggedInUser(fetchedProfile?.data);
+        } else {
+          navigate("/login");
+        }
+      }
+      findUser();
+
+    }, []);
+
+    console.log("Logged in user", loggedInUser);
+    console.log("Logged in user", loggedInUser.first_name);
+
+   /* useEffect(() => {
         // Find the restaurant based on restaurantId and set its name
         const selectedRestaurant = restaurants.find((r) => r.id == restaurantId);
         console.log("Selected Restaurant ", selectedRestaurant);
@@ -59,31 +89,37 @@ const AddPostForm = ({restaurantId}) => {
           setRestaurant(selectedRestaurant.name);
         }
       }, [restaurantId, restaurants]);
+*/
 
       const onPostReview = () => {
         if (restaurant && content) {
           const reviewData = {
             id: nanoid(),
-            restaurant_id: restaurantId,
+            restaurant_id: rest._id,
             content: content,
-            user_id: userId,
+            user_id: loggedInUser._id,
             content_accomodations: accomContent,
             accomodations: allergyRatings,
             rating: rating,
           };
 
-          dispatch(postAdd(reviewData));
-    
+          //dispatch(postAdd(reviewData));
+          reviewClient.createReview(reviewData);
+
           setRestaurant('');
           setContent('');
           setSelectedAllergy('');
           setAllergyRating(0);
         }
     
-        navigate(`/restaurant/${restaurantId}`);
+        navigate(`/restaurant/${rest._id}`);
       };
 
-    const canPost = Boolean(restaurant) && Boolean(content) && Boolean(userId)
+     const [canPost, setCanPost] = useState(false);
+
+      useEffect(() => {
+        setCanPost(Boolean(restaurant) && Boolean(content) && Boolean(loggedInUser._id));
+      }, [restaurant, content, loggedInUser]);
 
     const userOptions = users.map(user => (
         <option key={user._id} value={user._id}>
@@ -118,14 +154,17 @@ const AddPostForm = ({restaurantId}) => {
             type="text"
             id="postRestaurant"
             name="postRestaurant"
-            value={restaurant}
+            value={rest.name}
             onChange={() => {}}>
             </input>
             <label htmlFor="postAuthor">Author:</label>
-            <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
-                <option value=""></option>
-                {userOptions}
-            </select>
+            <input
+            type="text"
+            id="postAuthor"
+            name="postAuthor"
+            value={loggedInUser.first_name + " " + loggedInUser.last_name} 
+            onChange={() => {}}>
+            </input>
             <label htmlFor='postContent'>Restaurant Review:</label>
             <textarea
                 id="postContent"
