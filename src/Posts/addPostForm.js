@@ -5,36 +5,18 @@ import { nanoid } from '@reduxjs/toolkit';
 import {useNavigate} from 'react-router-dom';
 import './styling/posts.css'
 import * as client from "src/store/api";
-<<<<<<< HEAD
-=======
-import * as profileClient from "src/Profile/client";
->>>>>>> dev-js
 import PostStars from "./postStars"
 import * as restaurantClient from "src/store/restaurants";
 import * as reviewClient from "src/store/reviews";
 import { useParams } from 'react-router-dom';
-<<<<<<< HEAD
-=======
 
-import db from "src/Database";
->>>>>>> dev-js
-
-const AddPostForm = ({rest}) => {
-
-<<<<<<< HEAD
-    const [loggedInUser, setLoggedInUser] = useState({});
-=======
-    //const restaurants = db.restaurants;
-
-    //console.log("Restaurants: ", {restaurants});
->>>>>>> dev-js
+const AddPostForm = ({restaurant}) => {
 
     const [loggedInUser, setLoggedInUser] = useState({});
 
-    const [restaurant, setRestaurant] = useState({rest});
+
     const [content, setContent] = useState('');
     const [accomContent, setAccomContent] = useState('');
-    const [userId, setUserId] = useState('');
     const [rating, setRating] = useState(0);
     const [selectedAllergy, setSelectedAllergy] = useState('');
     const [allergyRating, setAllergyRating] = useState(0);
@@ -53,24 +35,16 @@ const AddPostForm = ({rest}) => {
     const allergies = ['gluten-Free', 'nut-Free', 'dairy-Free', 'shellfish', 'vegetarian', 'vegan'];
     
 
-    const onRestaurantChanged = e => setRestaurant(e.target.value)
     const onContentChanged = e => setContent(e.target.value)
     const onAccomContentChanged = e => setAccomContent(e.target.value)
-    const onAuthorChanged = e => setUserId(e.target.value)
     const onRatingChanged = (newRating) => setRating(newRating);
     
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-<<<<<<< HEAD
 
     useEffect(() => {
-      const findRestaurant = async () => {
-        console.log(restaurantId);
-        const restaurant = await restaurantClient.findRestaurantById(restaurantId);
-        setRestaurant(restaurant);
-      };
       const findUser = async () => {
         const fetchedProfile = await client.account();
         if (fetchedProfile) {
@@ -80,50 +54,13 @@ const AddPostForm = ({rest}) => {
         }
       }
       findUser();
-      findRestaurant();
     }, []);
-=======
-    console.log("Restaurant: ", rest);
-    console.log("Restaurant ID: ", restaurant._id)
-
-
-    useEffect(() => {
-      const findUser = async () => {
-        const token = localStorage.getItem("token");
-        const headers = { Authorization: `${token}` };
-        console.log("TOKEN IN ADD REVIEW", token);
-        const fetchedProfile = await profileClient.account(headers);
-        console.log("Fetched profile in add review", fetchedProfile);
-        if (fetchedProfile) {
-          console.log("Fetched User Data", fetchedProfile?.data);
-          setLoggedInUser(fetchedProfile?.data);
-        } else {
-          navigate("/login");
-        }
-      }
-      findUser();
-
-    }, []);
-
-    console.log("Logged in user", loggedInUser);
-    console.log("Logged in user", loggedInUser.first_name);
-
-   /* useEffect(() => {
-        // Find the restaurant based on restaurantId and set its name
-        const selectedRestaurant = restaurants.find((r) => r.id == restaurantId);
-        console.log("Selected Restaurant ", selectedRestaurant);
-        if (selectedRestaurant) {
-          setRestaurant(selectedRestaurant.name);
-        }
-      }, [restaurantId, restaurants]);
-*/
->>>>>>> dev-js
 
       const onPostReview = () => {
         if (restaurant && content) {
           const reviewData = {
             id: nanoid(),
-            restaurant_id: rest._id,
+            restaurant_id: restaurant._id,
             content: content,
             user_id: loggedInUser._id,
             content_accomodations: accomContent,
@@ -134,34 +71,18 @@ const AddPostForm = ({rest}) => {
           //dispatch(postAdd(reviewData));
           reviewClient.createReview(reviewData);
 
-          setRestaurant('');
           setContent('');
           setSelectedAllergy('');
           setAllergyRating(0);
         }
     
-        navigate(`/restaurant/${rest._id}`);
+        navigate(`/restaurant/${restaurant._id}`);
       };
     
       const [canPost, setCanPost] = useState(false);
-
-<<<<<<< HEAD
       useEffect(() => {
         setCanPost(Boolean(restaurant) && Boolean(content) && Boolean(loggedInUser._id));
       }, [restaurant, content, loggedInUser]);
-=======
-     const [canPost, setCanPost] = useState(false);
-
-      useEffect(() => {
-        setCanPost(Boolean(restaurant) && Boolean(content) && Boolean(loggedInUser._id));
-      }, [restaurant, content, loggedInUser]);
-
-    const userOptions = users.map(user => (
-        <option key={user._id} value={user._id}>
-            {user.first_name + " " + user.last_name} 
-        </option> 
-    ))
->>>>>>> dev-js
 
     const allergyOptions = allergies.map((allergy) => (
         <option key={allergy} value={allergy}>
@@ -188,14 +109,9 @@ const AddPostForm = ({rest}) => {
             type="text"
             id="postRestaurant"
             name="postRestaurant"
-<<<<<<< HEAD
             value={restaurant.name}
             onChange={() => {}}
             disabled='disabled'>
-=======
-            value={rest.name}
-            onChange={() => {}}>
->>>>>>> dev-js
             </input>
             <label htmlFor="postAuthor">Author:</label>
             <input
