@@ -1,27 +1,45 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+<<<<<<< HEAD
 export const BASE_API =
   process.env.REACT_APP_BACKEND_BASE_URL || "http://localhost:4000";
+=======
+export const BASE_API = process.env.REACT_APP_BACKEND_BASE_URL || 'http://localhost:4000';
+>>>>>>> dev-js
 export const USERS_API = `${BASE_API}/api/users`;
 
 const request = axios.create({
   withCredentials: true,
   headers: {
+<<<<<<< HEAD
     Authorization: Cookies.get("user") || "",
   },
 });
 
 console.log(Cookies.get("user"));
 
+=======
+    'Authorization': Cookies.get('user') || ''
+  }
+});
+>>>>>>> dev-js
 export const login = async (credentials) => {
   const response = await request.post(`${USERS_API}/signin`, credentials);
   return response?.data;
 };
+<<<<<<< HEAD
 export const checkToken = async (token) => {
   try {
     const response = await request.post(`${USERS_API}/check-token`, token);
     return response?.data;
+=======
+
+export const checkToken = async (token) => {
+  try {
+    const response = await request.post(`${USERS_API}/check-token`, token);
+    return response.data;
+>>>>>>> dev-js
   } catch (error) {
     console.log(error);
     return null;
@@ -42,6 +60,10 @@ export const updateUser = async (user) => {
   } catch (error) {
     console.log(error);
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev-js
 };
 export const findAllUsers = async () => {
   try {
@@ -50,6 +72,10 @@ export const findAllUsers = async () => {
   } catch (error) {
     console.log(error);
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev-js
 };
 export const createUser = async (user) => {
   try {
@@ -58,6 +84,10 @@ export const createUser = async (user) => {
   } catch (error) {
     console.log(error);
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev-js
 };
 export const findUserById = async (id) => {
   try {
@@ -66,6 +96,10 @@ export const findUserById = async (id) => {
   } catch (error) {
     console.log(error);
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev-js
 };
 export const deleteUser = async (user) => {
   try {
@@ -74,6 +108,10 @@ export const deleteUser = async (user) => {
   } catch (error) {
     console.log(error);
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev-js
 };
 export const register = async (user) => {
   const response = await request.post(`${USERS_API}/signup`, user);
@@ -81,7 +119,11 @@ export const register = async (user) => {
 };
 export const logout = async () => {
   const response = await request.post(`${USERS_API}/signout`);
+<<<<<<< HEAD
   return response?.data;
+=======
+  return response;
+>>>>>>> dev-js
 };
 export const friends = async (id) => {
   try {
@@ -113,4 +155,10 @@ export const addFriend = async (userId, friendId) => {
   } catch (error) {
     console.log(error);
   }
+<<<<<<< HEAD
 };
+=======
+}
+
+
+>>>>>>> dev-js

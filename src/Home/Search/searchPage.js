@@ -8,6 +8,8 @@ import StarRating from "./starRating"
 import ApiImport from "./ApiImport";
 import * as restaurantClient from "src/store/restaurants";
 import "./styling/search.css";
+import { server } from "fontawesome";
+
 
 const SearchPage = () => {
 
@@ -16,7 +18,10 @@ const SearchPage = () => {
     const searchName = useSelector((state) => state.search.name);
     const searchResults = useSelector((state) => state.search.results);
     const searchDistance = useSelector((state) => state.search.distance);
-    //console.log("Distance:", searchDistance);
+
+    const searchLoading = useSelector((state) => state.search.loading);
+    const searchError = useSelector((state) => state.search.error);
+
 
     const [userLocation, setUserLocation] = useState(null);
     const [restaurantDistance, setRestaurantDistance] = useState([]);
@@ -30,7 +35,6 @@ const SearchPage = () => {
                     long: position.coords.longitude,
                 };
                 setUserLocation(location);
-                //console.log(location);
             },
             (error) => {
                 console.error('Error getting user location:', error.message)
@@ -72,28 +76,26 @@ const SearchPage = () => {
         
       }, []);
 
+   /* useEffect(() => {
+        const findAllRestaurants = async () => {
+            const allRestaurants = await restaurantClient.findAllRestaurants();
+        }
+    })
+*/
     useEffect(() => {
 
         if(userLocation && searchResults.length > 0){
             const updateResults = searchResults.map((restaurant) => {
+                console.log("Restaurant", restaurant);
                 const distance = calculateDistance(userLocation.lat, userLocation.long, restaurant.Lat, restaurant.Long);
-                return {distance};
+                return distance;
             });
             dispatch(setDistance(updateResults));
             //console.log( 'Distance:', updateResults);
         }
 
 
-    }, [userLocation]);
-
-    const avgRating = (rating) => {
-        let sum = 0;
-        for (var i = 0; i < rating.length; i++){
-            sum += rating[i];
-        }
-        return (sum / rating.length);
-    }
-
+    }, [userLocation, searchLoading, dispatch]);
 
     return(
         <div className="container">
@@ -102,18 +104,19 @@ const SearchPage = () => {
             <SearchBar/>
             <div>
                 <h3>Search Results:</h3>
-                {searchResults.length === 0 ? (<ApiImport />) : 
+                {searchLoading && <p>Loading...</p>}
+                { !searchLoading && searchResults.length === 0 ? <ApiImport/> :
                 (
                     <ol>
                     
-                        {searchResults.length>0 && searchResults.map((result) => (
+                        {searchResults.map((result, index) => (
                             <Link key={result._id} to={`/restaurant/${result._id}`}>
                                 <li key={result._id} className="restaurantList"> 
                                     <h3 style={{color: "blue"}}>{result.name}</h3>  
                                     <div className="d-flex">
-                                    <StarRating rating={avgRating(result.reviews)}/> <p>{result.reviews.length} reviews</p>
+                                    <StarRating rating={result.averageRating}/> <p>{result.reviews.length} reviews</p>
                                     </div>
-                                    <strong>{searchDistance.length === 0 ? "" : Math.round(searchDistance[result.id -1].distance * 10)/10 + " mi away"} </strong>
+                                    <strong>{searchDistance.length === 0 ? "" : Math.round(searchDistance[index] * 10)/10 + " mi away"} </strong>
                                     <h5>{result.streetAddress}, {result.City}, {result.zipCode}</h5>
                                     <h5>{result.cuisine}</h5>
                                 </li>

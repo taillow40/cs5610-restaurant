@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import * as client from "src/store/api";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [error, setError] = useState("");
@@ -9,48 +8,39 @@ function Login() {
   const [fromData, setFormData] = useState({
     email: "",
     password: "",
-    type: "USER", // Default value
+    type: "USER",
   });
-  const navigate = useNavigate();
-<<<<<<< HEAD
 
-  const LogIn = async (e) => {
+   const LogIn = async (e) => {
     e.preventDefault();
     try {
       const response = await client.login(fromData);
-      if (response) {
-        setSuccessMsg("Successfully logged in");
-        Cookies.set("user", response?.data);
-        if (response.success) {
-          navigate("/");
-          window.location.reload();
+      
+      if (response && response.data) {
+        var { token, user } = response;
+        user = response.data;
+        // Check if user is defined before destructuring its properties
+        if (user) {
+          const { _id, email, type } = user;
+          setSuccessMsg("Successfully logged in");
+          Cookies.set("user", response.data);
+          Cookies.set("userType", type);
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 3000);
+        } else {
+          setError("User information not available");
         }
+      } else {
+        setError("Invalid response format");
       }
     } catch (err) {
       console.log(err);
-      setError(err.response.data.message);
+      setError(err?.response ? err?.response?.data?.message : "Internal Server Error");
     }
-=======
-  const signin = async () => {
-    try{ 
-      console.log("Credentials:", credentials);
-      const response = await client.signin(credentials);
-      if (response.success) {
-        const token = response.data;
-        localStorage.setItem("token", token);
-        navigate("/profile");
-      }
-      else{
-        console.error("Login failed:", response.message);
-      }
-    }
-    catch (error){
-      console.log("Error during login:", error);
-    }
-
->>>>>>> dev-js
   };
-
+  
+  
   return (
     <div className="auth-container">
       <h1>Log in</h1>
