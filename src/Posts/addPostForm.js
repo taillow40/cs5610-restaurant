@@ -8,6 +8,7 @@ import * as client from "src/store/api";
 import PostStars from "./postStars";
 import * as restaurantClient from "src/store/restaurants";
 import * as reviewClient from "src/store/reviews";
+import { set } from "date-fns";
 
 const AddPostForm = ({ restaurantId }) => {
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -15,6 +16,7 @@ const AddPostForm = ({ restaurantId }) => {
   const [restaurant, setRestaurant] = useState("");
   const [content, setContent] = useState("");
   const [accomContent, setAccomContent] = useState("");
+  const [writeAccomodation, setWriteAccomodation] = useState(false);
   const [userId, setUserId] = useState("");
   const [rating, setRating] = useState(0);
   const [selectedAllergy, setSelectedAllergy] = useState("");
@@ -103,6 +105,10 @@ const AddPostForm = ({ restaurantId }) => {
     </option>
   ));
 
+  const toggleAccomodationInput = () => {
+    setWriteAccomodation(!writeAccomodation);
+  }
+
   const onAllergyChanged = (allergy) => {
     // When the allergy dropdown changes, dynamically set the allergy rating
     setSelectedAllergy(allergy);
@@ -144,13 +150,22 @@ const AddPostForm = ({ restaurantId }) => {
         />
         <label htmlFor="rating">Rating:</label>
         <PostStars value={rating} onClick={setRating} />
-        <label htmlFor="accomContent">Accommodation Review:</label>
-        <textarea
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '400px', paddingTop: '20px', paddingBottom: '20px' }}>
+        <label style={{width: '700px'}} htmlFor="enableAccomodations">Describe Accommodations?</label>
+        <input 
+            type="checkbox" 
+            id="enableAccomodations" 
+            checked={writeAccomodation} 
+            onChange={toggleAccomodationInput} 
+        />
+        </div>
+        {writeAccomodation && <label htmlFor="accomContent">Accommodation Review:</label>}
+        {writeAccomodation && <textarea
           id="accomContent"
           name="accomContent"
           value={accomContent}
           onChange={onAccomContentChanged}
-        />
+        /> }
         <label htmlFor="allergyDropdown">Choose Allergy:</label>
         <select
           id="allergyDropdown"
@@ -163,7 +178,7 @@ const AddPostForm = ({ restaurantId }) => {
         <button
           className="btn btn-primary"
           type="button"
-          disabled={selectedAllergies.includes(selectedAllergy)}
+          disabled={selectedAllergy == '' || selectedAllergies.includes(selectedAllergy)}
           onClick={() => {
             setShowAllergyRating(true);
             setSelectedAllergies((prevSelectedAllergies) => [
