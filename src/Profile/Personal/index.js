@@ -1,20 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as client from "src/store/api";
+import * as favoriteAPI from "src/store/favorites";
 import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import "./index.css";
 import Cookies from "js-cookie";
+import StarRating from "src/Home/Search/starRating";
 
 function Personal() {
+  const navigate = useNavigate();
   const cookieToken = Cookies.get("user");
   const [profile, setProfile] = useState(null);
-  const navigate = useNavigate();
+  const [restaurants, setrestaurants] = useState([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
+      console.log("fetchedProfile");
       const fetchedProfile = await client.account();
       if (fetchedProfile) {
         setProfile(fetchedProfile?.data);
+        fetchUserFavs(fetchedProfile?.data?._id);
       } else {
         navigate("/login");
       }
@@ -22,7 +27,44 @@ function Personal() {
     fetchProfile();
   }, [cookieToken, navigate]);
 
-  
+  const fetchUserFavs = async (profileId) => {
+    try {
+      if(!profileId) return;
+      const response = await favoriteAPI.onGetUserFavoritesFull(profileId);
+      setrestaurants(response?.restaurants);
+    } catch (error) {}
+  };
+
+  const detectFavUnFavButton = async (e, resId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const fetchedProfile = await client.account();
+    if (!fetchedProfile) return navigate("/login");
+    const userId = fetchedProfile?.data?._id;
+    const response = await favoriteAPI.onGetUserFavorites(userId);
+    const restaurant = response.restaurants?.find((res) => res == resId);
+    return restaurant ? onRemoveFromFav(e, resId) : onAddToFav(e, resId);
+  };
+  const onAddToFav = async (e, restaurantId) => {
+    const fetchedProfile = await client.account();
+    const userId = fetchedProfile?.data?._id;
+    await favoriteAPI.onAddToFavorites({
+      userId,
+      restaurantId,
+    });
+    alert("Added to favorites");
+  };
+  const onRemoveFromFav = async (e, restaurantId) => {
+
+    const fetchedProfile = await client.account();
+    const userId = fetchedProfile?.data?._id;
+    await favoriteAPI.onRemoveFromFavorites({
+      userId,
+      restaurantId,
+    });
+    alert("Removed from favorites");
+
+  };
 
   const [p, setP] = useState({
     email: "",
@@ -44,8 +86,13 @@ function Personal() {
     type: "USER",
   });
   const updateModalRef = useRef(null);
-
-
+  const avgRating = (rating) => {
+    let sum = 0;
+    for (var i = 0; i < rating.length; i++) {
+      sum += rating[i];
+    }
+    return sum / rating.length;
+  };
   return (
     <div className="profile">
       {profile && (
@@ -207,6 +254,7 @@ function Personal() {
                     <option value="ADMIN">Admin</option>
                   </select>
                 </div>
+
                 {/* <div></div> */}
 
                 <div
@@ -216,8 +264,7 @@ function Personal() {
 
                     marginTop: "30px",
                   }}
-                >
-                </div>
+                ></div>
               </div>
             </div>
           </div>
@@ -355,6 +402,40 @@ function Personal() {
           </div>
         </div>
       </div>
+
+      <section>
+        <h3>Favorite Restaurants</h3>
+        <ol>
+          {restaurants.map((result) => {
+            return (
+              <Link key={result._id} to={`/restaurant/${result._id}`}>
+                <li
+                  key={result._id}
+                  className="restaurantList"
+                  style={{
+                    listStyle: "",
+                  }}
+                >
+                  <h3 style={{ color: "blue" }}>{result.name}</h3>
+                  <button
+                      onClick={(e) => detectFavUnFavButton(e, result._id)}
+                    >
+                      Toggle Favorite
+                    </button>
+                  <div className="d-flex">
+                    <StarRating rating={avgRating(result.reviews)} />{" "}
+                    <p>{result.reviews.length} reviews</p>
+                  </div>
+                  <h5>
+                    {result.streetAddress}, {result.City}, {result.zipCode}
+                  </h5>
+                  <h5>{result.cuisine}</h5>
+                </li>
+              </Link>
+            );
+          })}
+        </ol>
+      </section>
     </div>
   );
 }

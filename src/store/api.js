@@ -12,8 +12,9 @@ const request = axios.create({
   },
 });
 
+console.log(Cookies.get("user"));
 
-export const signin = async (credentials) => {
+export const login = async (credentials) => {
   const response = await request.post(`${USERS_API}/signin`, credentials);
   return response?.data;
 };
@@ -101,7 +102,6 @@ export const reviews = async (id) => {
 }
 
 export const addFriend = async (userId, friendId) => {
-  console.log(userId, friendId)
   const data = {
     userId: userId,
     friendId: friendId

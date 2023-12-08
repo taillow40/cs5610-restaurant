@@ -14,7 +14,7 @@ const PostsList = ({reviews}) => {
 
     const hasAccommodations = (accommodations) => {
 
-      const sumOfRatings = Object.values(accommodations).reduce((acc, rating) => acc + rating, 0);
+      const sumOfRatings = Object.values(accommodations)?.reduce((acc, rating) => acc + rating, 0);
       return sumOfRatings !== 0;
     };
 

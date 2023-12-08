@@ -61,6 +61,7 @@ function Edit() {
       const u = await client.updateUser(p);
       if (u?.modifiedCount) {
         navigate(`/profile`);
+        window.location.reload();
       }
     } catch (error) {}
   };
@@ -173,7 +174,8 @@ function Edit() {
             value={p.cuisine}
             onChange={(e) => {
               console.log(e.target.value);
-              setP({ ...p, cuisine: e.target.value })}}
+              setP({ ...p, cuisine: e.target.value });
+            }}
           >
             <option value="">Choose your favourite cuisine</option>
             <option value="Italian">Italian</option>

@@ -10,7 +10,7 @@ function ImageBox({restaurant, reviews }) {
     const cuisinesList = restaurant.cuisine;
 
     // Get average rating from reviews
-    const totalRating = reviews.reduce((acc, current) => {
+    const totalRating = reviews?.reduce((acc, current) => {
         return acc + current.rating;
     }, 0);
 
