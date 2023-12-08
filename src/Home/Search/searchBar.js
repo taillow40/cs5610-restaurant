@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter} from './searchReducer'
+import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter, searchAsync, sortByRating} from './searchReducer'
 
 const SearchBar = () => {
   //const [searchTerm, setSearchTerm] = useState('');
   //const [searchResults, setSearchResults] = useState([]);
+  const [isChecked, setisChecked] = useState(false);
 
   const dispatch = useDispatch();
-  const {searchName, cuisine, zipCode, city, streetAddress} = useSelector((state) => state.search);
+  const {searchName, cuisine, zipCode, city, streetAddress, sortByRating: sortChecked} = useSelector((state) => state.search);
 
   const handleNameChange = (event) => {
     console.log(event.target.value);
@@ -30,6 +31,32 @@ const SearchBar = () => {
   const handleStreetAddressChange = (newStreetAddress) => {
     dispatch(setStreetAddressFilter(newStreetAddress));
   };
+
+  const handleSortChange = (e) => {
+    const checked = e.target.checked;
+    setisChecked(checked);
+  
+    if (checked) {
+      dispatch(sortByRating(true));
+    } else {
+      dispatch(sortByRating(false));
+      dispatch(searchAsync());
+    }
+  };
+
+  const handleSearch = () => {
+    dispatch(searchAsync());
+    console.log(isChecked);
+    dispatch(sortByRating(isChecked));
+
+  };
+
+  useEffect(() => {
+    // Use useEffect to automatically trigger a search when sortChecked is false
+    if (!sortChecked) {
+      dispatch(searchAsync());
+    }
+  }, [sortChecked, dispatch]);
 
   const searchStyle = {
     width: "100%",
@@ -73,6 +100,13 @@ const SearchBar = () => {
       <input style={searchStyle} id="city" type="text" placeholder="Search by City" value={city} onChange={(e) => handleCityChange(e.target.value)} />
       <label htmlFor='address'>Address</label>
       <input style={searchStyle} id="address" type="text" placeholder="Search by Street Address" value={streetAddress} onChange={(e) => handleStreetAddressChange(e.target.value)} />
+      <label>
+        Sort by Rating (High to Low)
+        <input type="checkbox" onChange={e => handleSortChange(e)} />
+      </label>
+      <button style={buttonStyle} onClick={handleSearch}>
+        Search
+      </button>
     </div>
   );
 };

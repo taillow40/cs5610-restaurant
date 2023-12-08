@@ -4,13 +4,11 @@ import SearchBar from "./searchBar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setSearchName,
-  setDistance,
-  setStateRestaurants,
+  setDistance
 } from "./searchReducer";
 import { useEffect } from "react";
 import StarRating from "./starRating";
 import ApiImport from "./ApiImport";
-import * as restaurantClient from "src/store/restaurants";
 import * as favoriteAPI from "src/store/favorites";
 import * as client from "src/store/api";
 import "./styling/search.css";
@@ -70,13 +68,9 @@ const SearchPage = () => {
     return degrees * (Math.PI / 180);
   }
   useEffect(() => {
-    const findAllRestaurants = async () => {
-      const allRestaurants = await restaurantClient.findAllRestaurants();
-      setRestaurants(allRestaurants);
-      dispatch(setStateRestaurants(allRestaurants));
-    };
-    findAllRestaurants();
+
     getUserLocation();
+    dispatch(setSearchName(searchName));
   }, []);
 
   useEffect(() => {
@@ -124,14 +118,6 @@ const SearchPage = () => {
     alert("Removed from favorites");
   };
 
-  const avgRating = (rating) => {
-    let sum = 0;
-    for (var i = 0; i < rating.length; i++) {
-      sum += rating[i];
-    }
-    return sum / rating.length;
-  };
-
   return (
     <div className="container">
       <h1> Search </h1>
@@ -144,7 +130,7 @@ const SearchPage = () => {
         ) : (
           <ol>
             {searchResults?.length > 0 &&
-              searchResults?.map((result) => (
+              searchResults?.map((result, index) => (
                 <Link key={result._id} to={`/restaurant/${result._id}`}>
                   <li key={result._id} className="restaurantList">
                     <h3 style={{ color: "blue" }}>{result.name}</h3>
@@ -154,14 +140,14 @@ const SearchPage = () => {
                       Toggle Favorite
                     </button>
                     <div className="d-flex">
-                      <StarRating rating={avgRating(result.reviews)} />{" "}
+                      <StarRating rating={result.averageRating} />{" "}
                       <p>{result.reviews.length} reviews</p>
                     </div>
                     <strong>
                       {searchDistance.length === 0
                         ? ""
                         : Math.round(
-                            searchDistance[result.id - 1]?.distance * 10
+                            searchDistance[index]?.distance * 10
                           ) /
                             10 +
                           " mi away"}{" "}
