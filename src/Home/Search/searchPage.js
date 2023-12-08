@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SearchBar from "./searchBar";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,14 +11,17 @@ import { useEffect } from "react";
 import StarRating from "./starRating";
 import ApiImport from "./ApiImport";
 import * as restaurantClient from "src/store/restaurants";
+import * as favoriteAPI from "src/store/favorites";
+import * as client from "src/store/api";
 import "./styling/search.css";
 
 const SearchPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [restaurants, setRestaurants] = useState([]);
   const searchName = useSelector((state) => state.search.name);
   const searchResults = useSelector((state) => state.search.results);
-  const searchDistance = useSelector((state) => state.search.distance);
+  const searchDistance = useSelector((state) => state?.search?.distance);
   //console.log("Distance:", searchDistance);
 
   const [userLocation, setUserLocation] = useState(null);
@@ -70,6 +73,7 @@ const SearchPage = () => {
     const findAllRestaurants = async () => {
       const allRestaurants = await restaurantClient.findAllRestaurants();
       setRestaurants(allRestaurants);
+      dispatch(setStateRestaurants(allRestaurants));
     };
     findAllRestaurants();
     getUserLocation();
@@ -91,6 +95,35 @@ const SearchPage = () => {
     }
   }, [userLocation]);
 
+  const detectFavUnFavButton = async (e, resId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const fetchedProfile = await client.account();
+    if (!fetchedProfile) return navigate("/login");
+    const userId = fetchedProfile?.data?._id;
+    const response = await favoriteAPI.onGetUserFavorites(userId);
+    const restaurant = response.restaurants?.find((res) => res == resId);
+    return restaurant ? onRemoveFromFav(e, resId) : onAddToFav(e, resId);
+  };
+  const onAddToFav = async (e, restaurantId) => {
+    const fetchedProfile = await client.account();
+    const userId = fetchedProfile?.data?._id;
+    await favoriteAPI.onAddToFavorites({
+      userId,
+      restaurantId,
+    });
+    alert("Added to favorites");
+  };
+  const onRemoveFromFav = async (e, restaurantId) => {
+    const fetchedProfile = await client.account();
+    const userId = fetchedProfile?.data?._id;
+    await favoriteAPI.onRemoveFromFavorites({
+      userId,
+      restaurantId,
+    });
+    alert("Removed from favorites");
+  };
+
   const avgRating = (rating) => {
     let sum = 0;
     for (var i = 0; i < rating.length; i++) {
@@ -106,15 +139,20 @@ const SearchPage = () => {
       <SearchBar />
       <div>
         <h3>Search Results:</h3>
-        {searchResults.length === 0 ? (
+        {searchResults?.length === 0 ? (
           <ApiImport />
         ) : (
           <ol>
-            {searchResults.length > 0 &&
-              searchResults.map((result) => (
+            {searchResults?.length > 0 &&
+              searchResults?.map((result) => (
                 <Link key={result._id} to={`/restaurant/${result._id}`}>
                   <li key={result._id} className="restaurantList">
                     <h3 style={{ color: "blue" }}>{result.name}</h3>
+                    <button
+                      onClick={(e) => detectFavUnFavButton(e, result._id)}
+                    >
+                      Toggle Favorite
+                    </button>
                     <div className="d-flex">
                       <StarRating rating={avgRating(result.reviews)} />{" "}
                       <p>{result.reviews.length} reviews</p>

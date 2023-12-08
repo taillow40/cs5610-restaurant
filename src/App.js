@@ -1,12 +1,5 @@
 import "./App.css";
-import {
-  BrowserRouter,
-  HashRouter,
-  Link,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Personal from "./Profile/Personal";
 import Profile from "./Profile/Public";
 import EditProfile from "src/Profile/Edit";

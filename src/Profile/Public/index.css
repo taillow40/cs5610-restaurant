@@ -20,14 +20,11 @@
     grid-row: 2 / 3;
 }
 
-<<<<<<< HEAD
-=======
 .profile__some {
     grid-column: 1 / 3;
     grid-row: 3 / 3;
 }
 
->>>>>>> dev-tt
 .profile__edit {
     grid-column: 2/3;
     grid-row: 3/4;

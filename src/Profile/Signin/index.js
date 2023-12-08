@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import * as client from "src/store/api";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
- 
+
 function Login() {
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [formData, setFormData] = useState({
+  const [fromData, setFormData] = useState({
     email: "",
     password: "",
     type: "USER", // Default value
   });
   const navigate = useNavigate();
- 
+
   const LogIn = async (e) => {
     e.preventDefault();
     try {
-      const response = await client.signin(formData);
+      const response = await client.login(fromData);
       console.log(response);
       if (response) {
         setSuccessMsg("Successfully logged in");
@@ -31,50 +31,50 @@ function Login() {
       setError(err?.response?.data?.message || "Something went wrong!");
     }
   };
- 
+
   return (
     <div className="auth-container">
       <h1>Log in</h1>
       {error && <div className="error-message">{error}</div>}
       {successMsg && <div>{successMsg}</div>}
- 
+
       <form onSubmit={LogIn}>
         <div className="form-group">
           <label>Email:</label>
           <input
             required
             type="email"
-            value={formData.email}
+            value={fromData.email}
             onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
+              setFormData({ ...fromData, email: e.target.value })
             }
           />
         </div>
- 
+
         <div className="form-group">
           <label>Password:</label>
           <input
             required
             type="password"
-            value={formData.password}
+            value={fromData.password}
             onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
+              setFormData({ ...fromData, password: e.target.value })
             }
           />
         </div>
- 
+
         <div className="form-group">
           <label>User Type:</label>
           <select
-            value={formData.type}
-            onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+            value={fromData.type}
+            onChange={(e) => setFormData({ ...fromData, type: e.target.value })}
           >
             <option value="USER">User</option>
             <option value="RESTAURANT">Restaurant</option>
             <option value="ADMIN">Admin</option>\
           </select>
         </div>
- 
+
         <button className="auth-button" type="submit">
           LogIn
         </button>
@@ -82,5 +82,5 @@ function Login() {
     </div>
   );
 }
- 
+
 export default Login;

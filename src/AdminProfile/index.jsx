@@ -57,6 +57,7 @@ function AdminProfile() {
   });
   const updateSaveRef = useRef(null);
   const updateModalRef = useRef(null);
+
   const updateAUser = async (p) => {
     const user = await client.updateUser(p);
     if (user) {
@@ -496,12 +497,12 @@ function AdminProfile() {
                     onClick={() => {
                       updateAUser(up);
                     }}
-                    ref={updateSaveRef}
+                    
                   >
                     Update User
                   </button>
 
-                  <button className="edit__cancel w-75" data-bs-dismiss="modal">
+                  <button className="edit__cancel w-75" data-bs-dismiss="modal" ref={updateSaveRef}>
                     Cancel
                   </button>
                 </div>
