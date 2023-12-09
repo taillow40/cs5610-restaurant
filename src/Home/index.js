@@ -51,6 +51,9 @@ function Home() {
         setFavorites(fetchedFavorites);
         const fetchedRestaurants = await getRests(fetchedProfile);
         fillRatings(fetchedRestaurants);
+      } else {
+        const fetchedRestaurants = await fillAllRestaurants();
+        fillRatings(fetchedRestaurants);
       }
     };
     fetchProfile();
@@ -83,6 +86,12 @@ function Home() {
     }
     
   };
+
+  const fillAllRestaurants = async () => {
+    const fetchedRestaurants = await restaurantAPI.findAllRestaurants();
+    setRestaurants(fetchedRestaurants);
+    return fetchedRestaurants;
+  }
 
   const searchDistance = useSelector((state) => state?.search?.distance);
 
@@ -128,9 +137,9 @@ function Home() {
       <div
         className='restaurantListContainer'
       >
-        <h2>Featured Restaurants</h2>
+        <h2>Featured Restaurants for {profile && profile.first_name}</h2>
         <ul className='restaurantList'>
-          {restaurants.map((result) => {
+          {restaurants.length > 0 && restaurants.map((result) => {
             return (
               
                 <li
@@ -161,6 +170,9 @@ function Home() {
                 </li>
             );
           })}
+          {restaurants.length === 0 && <div className='noFeaturedRestaurants'>
+            No Restaurants Found
+            </div>}
         </ul>
       </div>
     </>
