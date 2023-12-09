@@ -16,7 +16,8 @@ const searchSlice = createSlice({
     results: [],
     loading: false,
     error: null,
-    sortByRating: false
+    sortByRating: false,
+    sortByDistance: false
   },
   reducers: {
     setSearchName: (state, action) => {
@@ -65,11 +66,11 @@ const searchSlice = createSlice({
       state.results = [];
       state.error = true;
     },
-    sortByRating: (state, action) => {
+    sortRating: (state, action) => {
         state.sortByRating = action.payload;
-        if (state.sortByRating) {
-            state.results.sort((a, b) => b.averageRating - a.averageRating);
-          }
+    },
+    sortDistance: (state, action) => {
+        state.sortByDistance = action.payload;
     }
   },
 });
@@ -77,13 +78,28 @@ const searchSlice = createSlice({
 export const searchAsync = () => async (dispatch, getState) => {
   // Retrieve the current state from the Redux store
   const { name, cuisine, zipCode, city, streetAddress } = getState().search;
+  /*if(name == null){
+    name = '';
+  }
+  if(cuisine == null){
+    cuisine = '';
+  }
+  if(city == null){
+    city = '';
+  }
+  if(zipCode == null){
+    zipCode = '';
+  }
+  if(streetAddress == null){
+    streetAddress = '';
+  }*/
 
   dispatch(setSearchLoading());
 
   try {
     // Construct the query string based on the current state
     const queryString = `?name=${name}&cuisine=${cuisine}&zipCode=${zipCode}&city=${city}&streetAddress=${streetAddress}`;
-    console.log("Qury String:", queryString);
+    console.log("Query String:", queryString);
     // Make a request to your server-side search API
     const response = await axios.get(`${SEARCH_API}${queryString}`);
 
@@ -92,6 +108,7 @@ export const searchAsync = () => async (dispatch, getState) => {
   } catch (error) {
     // Dispatch error action if something goes wrong
     dispatch(setSearchError('Failed to fetch search results'));
+    console.error("Failed to send search request");
   }
 };
 
@@ -132,7 +149,8 @@ export const searchAsync = () => async (dispatch, getState) => {
     setSearchLoading,
     setSearchSuccess,
     setSearchError,
-    sortByRating
+    sortRating,
+    sortDistance
   } = searchSlice.actions;
 
   export default searchSlice.reducer;
