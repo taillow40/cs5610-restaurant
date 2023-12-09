@@ -78,7 +78,7 @@ const searchSlice = createSlice({
 export const searchAsync = () => async (dispatch, getState) => {
   // Retrieve the current state from the Redux store
   const { name, cuisine, zipCode, city, streetAddress } = getState().search;
-  if(name == null){
+  /*if(name == null){
     name = '';
   }
   if(cuisine == null){
@@ -92,7 +92,7 @@ export const searchAsync = () => async (dispatch, getState) => {
   }
   if(streetAddress == null){
     streetAddress = '';
-  }
+  }*/
 
   dispatch(setSearchLoading());
 

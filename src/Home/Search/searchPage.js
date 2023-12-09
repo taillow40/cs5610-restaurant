@@ -135,13 +135,13 @@ const SearchPage = () => {
 
   useEffect(() => {
     getUserLocation();
-    dispatch(setSearchName(name));
-    dispatch(setCuisineFilter(cuisine));
-    dispatch(setCityFilter(city));
-    dispatch(setZipCodeFilter(zipCode));
-    dispatch(setStreetAddressFilter(streetAddress));
-    dispatch(sortRating(sort));
-    dispatch(sortDistance(sortDist));
+    dispatch(setSearchName(name || ""));
+    dispatch(setCuisineFilter(cuisine || ""));
+    dispatch(setCityFilter(city || ""));
+    dispatch(setZipCodeFilter(zipCode || ""));
+    dispatch(setStreetAddressFilter(streetAddress || ""));
+    dispatch(sortRating(sort || false));
+    dispatch(sortDistance(sortDist || false));
     dispatch(searchAsync());
     // Fetch search criteria from the server
     //findUser();
