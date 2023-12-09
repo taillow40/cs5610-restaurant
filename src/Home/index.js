@@ -137,7 +137,7 @@ function Home() {
       <div
         className='restaurantListContainer'
       >
-        <h2>Featured Restaurants for {profile && profile.first_name}</h2>
+        <h2>Featured Restaurants {profile && 'for ' + profile.first_name}</h2>
         <ul className='restaurantList'>
           {restaurants.length > 0 && restaurants.map((result) => {
             return (
