@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
-
+import { useState } from 'react';
 const StarRating = ({ rating }) => {
+  const [ratingNumber, setRatingNumber] = useState(rating);
+  useEffect(() => {
+    setRatingNumber(rating);
+}, [rating]);
   const totalStars = 5;
-  const filledStars = Math.floor(rating);
+  const filledStars = Math.floor(ratingNumber);
   const hasHalfStar = rating % 1 !== 0;
 
   const renderStars = () => {
