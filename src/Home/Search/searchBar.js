@@ -14,7 +14,32 @@ const SearchBar = () => {
 
 
   const dispatch = useDispatch();
-  const {name, cuisine, zipCode, city, streetAddress, sortByRating: sortChecked, sortByDistance: sortDist } = useSelector((state) => state.search);
+  let {name, cuisine, zipCode, city, streetAddress, sortByRating: sortChecked, sortByDistance: sortDist } = useSelector((state) => state.search);
+
+  if(name == null){
+    name = '';
+  }
+  if(cuisine == null){
+    cuisine = '';
+  }
+  if(city == null){
+    city = '';
+  }
+  if(zipCode == null){
+    zipCode = '';
+  }
+  if(streetAddress == null){
+    streetAddress = '';
+  }
+  if(sortChecked == null){
+    sortChecked = false;
+  }
+  if(sortDist == null){
+    sortDist = false;
+  }
+
+
+  console.log(name, cuisine, zipCode);
 
   const handleNameChange = (event) => {
   //  console.log(event.target.value);

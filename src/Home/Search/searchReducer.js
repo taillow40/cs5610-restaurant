@@ -78,6 +78,21 @@ const searchSlice = createSlice({
 export const searchAsync = () => async (dispatch, getState) => {
   // Retrieve the current state from the Redux store
   const { name, cuisine, zipCode, city, streetAddress } = getState().search;
+  if(name == null){
+    name = '';
+  }
+  if(cuisine == null){
+    cuisine = '';
+  }
+  if(city == null){
+    city = '';
+  }
+  if(zipCode == null){
+    zipCode = '';
+  }
+  if(streetAddress == null){
+    streetAddress = '';
+  }
 
   dispatch(setSearchLoading());
 
@@ -93,6 +108,7 @@ export const searchAsync = () => async (dispatch, getState) => {
   } catch (error) {
     // Dispatch error action if something goes wrong
     dispatch(setSearchError('Failed to fetch search results'));
+    console.error("Failed to send search request");
   }
 };
 
