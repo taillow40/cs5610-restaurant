@@ -101,11 +101,6 @@ function SummaryBox({ restaurants, reviews }) {
           })
         )}
       </aside>
-      {/* To put here: <br />
-            Anything that matches the user's preferences <br />
-            Other restaurant detail that we can get, such as opening hours, map embed, etc <br />
-            <br />
-            <p>Other users say...: Gluten Free (80%)</p> */}
     </div>
   );
 }
