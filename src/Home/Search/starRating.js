@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import { FaRegStarHalfStroke } from "react-icons/fa6";
 import { useState } from 'react';
 const StarRating = ({ rating }) => {
   const [ratingNumber, setRatingNumber] = useState(rating);
@@ -19,10 +20,10 @@ const StarRating = ({ rating }) => {
         stars.push(<FaStar key={i} />);
       } else if (hasHalfStar && i === filledStars + 1) {
         // Half-filled star
-        stars.push(<FaStarHalfAlt key={i} />);
+        stars.push(<FaRegStarHalfStroke key={i} />);
       } else {
         // Empty star
-        stars.push(<FaStar key={i} style={{ opacity: 0.5 }} />);
+        stars.push(<FaRegStar key={i} />);
       }
     }
 

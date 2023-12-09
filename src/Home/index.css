@@ -26,23 +26,23 @@
 .restaurantList {
     list-style: none;
     width: 100%;
-    border: 0px solid black;
+    border: 0px solid #36454F;
 }
 
 .restaurantListLink {
     text-decoration: none;
-    color: black;
+    color: #36454F;
     
 }
 
 .restaurantListLink:hover {
     text-decoration: none;
-    color: black;
+    color: #36454F;
 }
 
 .restaurantListItems {
-    color: black;
-    border: 1px solid black;
+    color: #36454F;
+    border: 1px solid #36454F;
     border-radius: 5px;
     padding: 5px;
     margin-bottom: 20px;
