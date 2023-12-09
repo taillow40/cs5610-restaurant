@@ -16,7 +16,8 @@ const searchSlice = createSlice({
     results: [],
     loading: false,
     error: null,
-    sortByRating: false
+    sortByRating: false,
+    sortByDistance: false
   },
   reducers: {
     setSearchName: (state, action) => {
@@ -67,9 +68,9 @@ const searchSlice = createSlice({
     },
     sortRating: (state, action) => {
         state.sortByRating = action.payload;
-        if (state.sortByRating) {
-            state.results.sort((a, b) => b.averageRating - a.averageRating);
-          }
+    },
+    sortDistance: (state, action) => {
+        state.sortByDistance = action.payload;
     }
   },
 });
@@ -83,7 +84,7 @@ export const searchAsync = () => async (dispatch, getState) => {
   try {
     // Construct the query string based on the current state
     const queryString = `?name=${name}&cuisine=${cuisine}&zipCode=${zipCode}&city=${city}&streetAddress=${streetAddress}`;
-    console.log("Qury String:", queryString);
+    console.log("Query String:", queryString);
     // Make a request to your server-side search API
     const response = await axios.get(`${SEARCH_API}${queryString}`);
 
@@ -132,7 +133,8 @@ export const searchAsync = () => async (dispatch, getState) => {
     setSearchLoading,
     setSearchSuccess,
     setSearchError,
-    sortRating
+    sortRating,
+    sortDistance
   } = searchSlice.actions;
 
   export default searchSlice.reducer;
