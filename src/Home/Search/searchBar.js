@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter, searchAsync, sortByRating} from './searchReducer'
+import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter, searchAsync, sortRating} from './searchReducer'
+import {useNavigate} from "react-router-dom";
 
 const SearchBar = () => {
   //const [searchTerm, setSearchTerm] = useState('');
   //const [searchResults, setSearchResults] = useState([]);
+
+  const navigate = useNavigate();
+
   const [isChecked, setisChecked] = useState(false);
 
   const dispatch = useDispatch();
-  const {searchName, cuisine, zipCode, city, streetAddress, sortByRating: sortChecked} = useSelector((state) => state.search);
+  const {name, cuisine, zipCode, city, streetAddress, sortByRating: sortChecked} = useSelector((state) => state.search);
 
   const handleNameChange = (event) => {
     console.log(event.target.value);
@@ -37,9 +41,9 @@ const SearchBar = () => {
     setisChecked(checked);
   
     if (checked) {
-      dispatch(sortByRating(true));
+      dispatch(sortRating(true));
     } else {
-      dispatch(sortByRating(false));
+      dispatch(sortRating(false));
       dispatch(searchAsync());
     }
   };
@@ -47,7 +51,11 @@ const SearchBar = () => {
   const handleSearch = () => {
     dispatch(searchAsync());
     console.log(isChecked);
-    dispatch(sortByRating(isChecked));
+    dispatch(sortRating(isChecked));
+
+    navigate(
+      `/search?name=${name}&cuisine=${cuisine}&zipCode=${zipCode}&city=${city}&streetAddress=${streetAddress}&sortByRating=${!isChecked}`
+    );
 
   };
 
@@ -89,7 +97,7 @@ const SearchBar = () => {
           id="name"
           type="text"
           placeholder="Search by Restaurant Name"
-          value={searchName}
+          value={name}
           onChange={handleNameChange}
         />
       <label htmlFor='cuisine'>Cuisine</label>

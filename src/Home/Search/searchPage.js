@@ -1,10 +1,15 @@
 import { React, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import SearchBar from "./searchBar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setSearchName,
-  setDistance
+  setDistance,
+  setCityFilter,
+  setCuisineFilter,
+  setZipCodeFilter,
+  setStreetAddressFilter,
+  sortRating
 } from "./searchReducer";
 import { useEffect } from "react";
 import StarRating from "./starRating";
@@ -16,6 +21,8 @@ import "./styling/search.css";
 const SearchPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log("Name:", name);
+  console.log("cuisine", cuisine);
   const [restaurants, setRestaurants] = useState([]);
   const searchName = useSelector((state) => state.search.name);
   const searchResults = useSelector((state) => state.search.results);
@@ -67,10 +74,33 @@ const SearchPage = () => {
   function toRadians(degrees) {
     return degrees * (Math.PI / 180);
   }
-  useEffect(() => {
 
+  const fetchSearchCriteria = async () => {
+    try {
+      const userId = "123"; // Replace with actual user ID or authentication logic
+      const response = await fetch(`/api/getSearchCriteria/${userId}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        // Dispatch success action with retrieved search criteria
+        dispatch(setSearchSuccess(data.searchCriteria));
+      } else {
+        // Dispatch error action if the criteria could not be retrieved
+        dispatch(setSearchError());
+      }
+    } catch (error) {
+      console.error("Error fetching search criteria:", error.message);
+      // Dispatch error action if an exception occurred
+      dispatch(setSearchError());
+    }
+  };
+
+  
+  useEffect(() => {
     getUserLocation();
-    dispatch(setSearchName(searchName));
+
+    // Fetch search criteria from the server
+    fetchSearchCriteria();
   }, []);
 
   useEffect(() => {
