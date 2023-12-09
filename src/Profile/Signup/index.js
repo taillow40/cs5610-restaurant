@@ -167,6 +167,18 @@ function Signup() {
           >
             <option value="">Choose your favourite cuisine</option>
             <option value="Italian">Italian</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Thai">Thai</option>
+            <option value="Korean">Korean</option>
+            <option value="Vietnamese">Vietnamese</option>
+            <option value="Greek">Greek</option>
+            <option value="Spanish">Spanish</option>
+            <option value="Lebanese">Lebanese</option>
+            <option value="Turkish">Turkish</option>
+            <option value="Moroccan">Moroccan</option>
+            <option value="Ethiopian">Ethiopian</option>
+            <option value="Egyptian">Egyptian</option>
+            <option value="Mexican">Mexican</option>
             <option value="Japanese">Japanese</option>
             <option value="Mexican">Mexican</option>
             <option value="American">American</option>

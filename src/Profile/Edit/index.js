@@ -1,65 +1,23 @@
-// import React from "react";
-// import { useNavigate, useParams, Link } from "react-router-dom";
-// import { useSelector, useDispatch } from "react-redux";
-// import "./index.css"
-// import {
-//     addProfile,
-//     deleteProfile,
-//     updateProfile,
-//     setProfile,
-// } from "src/Profile/profilesReducer";
-// function Edit() {
-//     const profiles = useSelector((state) => state.profilesReducer.profiles);
-//     const profile = useSelector((state) => state.profilesReducer.profile);
-//     const dispatch = useDispatch();
-
-//     const navigate = useNavigate();
-//     return (
-//         <div className="edit">
-//             <h1>Edit Profile</h1>
-//             <div className="edit__grid">
-//                 <div className="edit__first-name">
-//                     <label>First Name</label>
-//                     <input type="text" placeholder="First Name" value={profile.first_name} onChange={(e) => dispatch(setProfile({ ...profile, first_name: e.target.value }))} />
-//                 </div>
-//                 <div className="edit__last-name">
-//                     <label>Last Name</label>
-//                     <input type="text" placeholder="Last Name" value={profile.last_name} onChange={(e) => dispatch(setProfile({ ...profile, last_name: e.target.value }))} />
-//                 </div>
-
-//                 <button className="edit__save"
-//                     onClick={() => {
-//                         dispatch(updateProfile(profile));
-//                         navigate(`/profile`);
-//                     }}>
-//                     Save</button>
-
-//                 <button className="edit__cancel"
-//                     onClick={() => {
-
-//                         navigate(`/profile`);
-//                     }}>
-//                     Cancel</button>
-
-//             </div>
-//         </div>
-//     );
-
-// }
-
-// export default Edit;
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 import * as client from "src/store/api";
+import Cookies from "js-cookie";
 
 function Edit() {
   const navigate = useNavigate();
 
   const updateUser = async () => {
     try {
+      const fetchedProfile = await client.account();
       const u = await client.updateUser(p);
-      if (u?.modifiedCount) {
+      console.log("u :: ", u);
+      if (fetchedProfile.data.type != "ADMIN" && u.type == "ADMIN") {
+        Cookies.remove("user");
+        navigate("/login");
+        window.location.reload();
+        return;
+      } else if (u?._id) {
         navigate(`/profile`);
         window.location.reload();
       }
@@ -89,10 +47,10 @@ function Edit() {
   }, [navigate]);
 
   return (
-    <div className="edit">
+    <div className="profile">
       <h1>Edit Profile</h1>
-      <div className="edit__grid">
-        <div className="edit__first-name">
+      <div className="profile-flex">
+        <div className="w-1-2">
           <label>First Name</label>
           <input
             type="text"
@@ -108,7 +66,7 @@ function Edit() {
             }
           />
         </div>
-        <div className="edit__last-name">
+        <div className="w-1-2">
           <label>Last Name</label>
           <input
             type="text"
@@ -124,7 +82,9 @@ function Edit() {
             }
           />
         </div>
-        <div className="mt-4">
+      </div>
+      <div className="profile-flex">
+        <div className="w-1-2">
           <label>Email</label>
           <input
             type="text"
@@ -140,7 +100,7 @@ function Edit() {
             }
           />
         </div>
-        <div className="mt-4">
+        <div className="w-1-2">
           <label>Phone</label>
           <input
             type="text"
@@ -156,7 +116,9 @@ function Edit() {
             }
           />
         </div>
-        <div className="mt-5">
+      </div>
+      <div className="profile-flex">
+        <div className="w-1-2">
           <label>User Type</label>
           <select
             value={p.type}
@@ -167,8 +129,7 @@ function Edit() {
             <option value="ADMIN">Admin</option>
           </select>
         </div>
-
-        <div className="mt-5">
+        <div className="w-1-2">
           <label>Cuisine:</label>
           <select
             value={p.cuisine}
@@ -193,8 +154,8 @@ function Edit() {
             <option value="Snacks">Snacks</option>
           </select>
         </div>
-        <div></div>
-
+      </div>
+      <div className="profile-flex">
         <div
           className=""
           style={{
