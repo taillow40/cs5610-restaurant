@@ -11,13 +11,12 @@ function Edit() {
     try {
       const fetchedProfile = await client.account();
       const u = await client.updateUser(p);
-      console.log("u :: ", u);
       if (fetchedProfile.data.type != "ADMIN" && u.type == "ADMIN") {
         Cookies.remove("user");
         navigate("/login");
         window.location.reload();
         return;
-      } else if (u?._id) {
+      } else {
         navigate(`/profile`);
         window.location.reload();
       }
