@@ -34,6 +34,25 @@
     object-fit: cover;
 }
 
+.restaurant-card-mobile {
+    background-color: #5dc380;
+    margin:20px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding:10px;
+    border-radius:10px;
+    object-fit: cover;
+    max-width: 100%;
+}
+
+.restaurant-card-mobile h1 {
+    font-size: 1.7rem;
+}
+
+.restaurant-card-mobile h2 {
+    font-size: 1.5rem;
+}
+
 .image-container {
     /* position: absolute;*/
     object-fit: cover;
