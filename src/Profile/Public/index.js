@@ -6,19 +6,6 @@ import * as follows from "src/store/follows";
 import * as favorites from "src/store/favorites";
 import * as likes from "src/store/albums";
 import { useState, useEffect } from "react";
-// Comment out for not getting used
-// import {
-//     addProfile,
-//     deleteProfile,
-//     updateProfile,
-//     setProfile,
-// } from "src/Profile/profilesReducer";
-// import {
-//     addComment,
-//     deleteComment,
-//     updateComment,
-//     setComment,
-// } from "src/Comment/commentsReducer";
 import "./index.css";
 import StarRating from "src/Home/Search/starRating";
 const colors = [
@@ -171,10 +158,10 @@ function Public() {
             <div>Email</div>
             <div>{profile.email}</div>
           </section>
-          {/* <section>
+          <section>
             <div>Phone number</div>
             <div>{profile.phone_number}</div>
-          </section> */}
+          </section>
           <section>
             <div>User Type</div>
             <div>{profile.type}</div>
@@ -184,7 +171,7 @@ function Public() {
             <div>{profile.cuisine}</div>
           </section>
           <section>
-            <div>Profile URL:</div>
+            {/* <div>Profile URL:</div>
             <div style={{ display: "inline-flex", gap: "1rem" }}>
               <strong>{window.location.href}</strong>{" "}
               <button
@@ -202,7 +189,7 @@ function Public() {
               >
                 Copy URL
               </button>
-            </div>
+            </div> */}
           </section>
           <button
             className="btn-edit"
@@ -283,7 +270,7 @@ function Public() {
 
         {selected === 3 && (
           <ul className="profile__friends__list">
-            {followers.map((friend) => (
+            {followers?.map((friend) => (
               <li key={friend._id}>
                 <aside
                   className="profile-card"
@@ -309,7 +296,7 @@ function Public() {
         )}
         {selected === 4 && (
           <ul className="profile__friends__list">
-            {followings.map((friend) => (
+            {followings?.map((friend) => (
               <li key={friend._id}>
                 <aside
                   className="profile-card"

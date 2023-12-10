@@ -120,7 +120,7 @@ const AddPostForm = ({ restaurantId }) => {
   };
 
   return (
-    <div>
+    <div className="formContainer">
       <form className="postForm">
         <label htmlFor="postRestaurant">Restaurant:</label>
         <input
@@ -141,7 +141,7 @@ const AddPostForm = ({ restaurantId }) => {
           onChange={() => {}}
           disabled="disabled"
         ></input>
-        <label htmlFor="postContent">Restaurant Review:</label>
+        <label htmlFor="postContent">Tell us about your experience</label>
         <textarea
           id="postContent"
           name="postContent"
@@ -151,6 +151,7 @@ const AddPostForm = ({ restaurantId }) => {
         <label htmlFor="rating">Rating:</label>
         <PostStars value={rating} onClick={setRating} />
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '400px', paddingTop: '20px', paddingBottom: '20px' }}>
+        <div className="allergySection"> 
         <label style={{width: '700px'}} htmlFor="enableAccomodations">Describe Accommodations?</label>
         <input 
             type="checkbox" 
@@ -158,7 +159,6 @@ const AddPostForm = ({ restaurantId }) => {
             checked={writeAccomodation} 
             onChange={toggleAccomodationInput} 
         />
-        </div>
         {writeAccomodation && <label htmlFor="accomContent">Accommodation Review:</label>}
         {writeAccomodation && <textarea
           id="accomContent"
@@ -166,30 +166,32 @@ const AddPostForm = ({ restaurantId }) => {
           value={accomContent}
           onChange={onAccomContentChanged}
         /> }
+       
         <label htmlFor="allergyDropdown">Choose Allergy:</label>
-        <select
-          id="allergyDropdown"
-          value={selectedAllergy}
-          onChange={(e) => onAllergyChanged(e.target.value)}
-        >
-          <option value=""></option>
-          {allergyOptions}
-        </select>
-        <button
-          className="btn btn-primary"
-          type="button"
-          disabled={selectedAllergy == '' || selectedAllergies.includes(selectedAllergy)}
-          onClick={() => {
-            setShowAllergyRating(true);
-            setSelectedAllergies((prevSelectedAllergies) => [
-              ...prevSelectedAllergies,
-              selectedAllergy,
-            ]);
-          }}
-        >
-          Add Allergy Rating
-        </button>
-
+        <div className="addAllergy">
+          <select
+            id="allergyDropdown"
+            value={selectedAllergy}
+            onChange={(e) => onAllergyChanged(e.target.value)}
+          >
+            <option value=""></option>
+            {allergyOptions}
+          </select>
+          <button
+            className="btn btn-primary"
+            type="button"
+            disabled={selectedAllergy == '' || selectedAllergy == ' ' || selectedAllergies.includes(selectedAllergy)}
+            onClick={() => {
+              setShowAllergyRating(true);
+              setSelectedAllergies((prevSelectedAllergies) => [
+                ...prevSelectedAllergies,
+                selectedAllergy,
+              ]);
+            }}
+          >
+            Add Allergy Rating
+          </button>
+        </div>
         {selectedAllergies.map((allergy) => (
           <div key={allergy}>
             <label>Rate {allergy}:</label>
@@ -204,6 +206,8 @@ const AddPostForm = ({ restaurantId }) => {
             />
           </div>
         ))}
+        </div>
+        </div>
         <button
           className="btn btn-primary postButton"
           type="button"

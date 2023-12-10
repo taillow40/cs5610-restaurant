@@ -140,7 +140,7 @@ function AdminProfile() {
             </thead>
             <tbody>
               {allUser &&
-                allUser.map((user, i) => {
+                allUser?.map((user, i) => {
                   return (
                     <tr className="" key={i}>
                       <td>{user?.email}</td>

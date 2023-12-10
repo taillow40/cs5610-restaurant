@@ -1,54 +1,100 @@
 .profile {
-    padding: 3rem;
-    color: #36454f;
+  padding: 3rem;
+  color: #36454f;
+}
+.public-profile {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem 0;
+  box-shadow: 3px 3px 5px #dddd, -2px -2px 1px -1px #dddd;
+  padding: 2.5rem;
+}
+.public-profile section {
+  display: inline-flex;
+  align-items: center;
+}
+
+.public-profile section div:first-child {
+  width: 250px;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.public-profile section div:last-child {
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+.btn-edit {
+  background-color: lightcoral;
+  border: none;
+  outline: none;
+  padding: 0.2rem;
+  border-radius: 0.25rem;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  width: 150px;
+}
+
+.tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tab {
+  background-color: #dbdbdb;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.tab.selected {
+  background-color: #c4a2a2;
+}
+
+@media (max-width: 767px) {
+  .public-profile section div:first-child {
+    width: 150px;
+    font-size: 1rem;
   }
-  .public-profile {
-    display: flex;
-    flex-direction: column;
-    margin: 2rem 0;
-    box-shadow: 3px 3px 5px #dddd, -2px -2px 1px -1px #dddd;
-    padding: 2.5rem;
+
+  .public-profile section div:last-child {
+    font-size: 1rem;
   }
+}
+
+@media (max-width: 500px) {
   .public-profile section {
     display: inline-flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
   }
-  
-  .public-profile section div:first-child {
-    width: 250px;
-    font-weight: 500;
-    font-size: 1.2rem;
-  }
-  
-  .public-profile section div:last-child {
-    font-weight: 600;
+  h1 {
     font-size: 1.3rem;
   }
-  .btn-edit {
-      background-color: lightcoral;
-      border: none;
-      outline: none;
-      padding: .2rem;
-      border-radius: .25rem;
-      font-size: 1.2rem;
-      margin-top: 1rem;
-      width: 150px;
+  h3 {
+    font-size: 1.15rem;
   }
-  
   .tabs {
-      display: inline-flex;
-      align-items: center;
-      gap: .75rem;
+    overflow-x: auto;
+    width: 300px;
   }
-  
   .tab {
-      background-color: #dbdbdb;
-      border-radius: .2rem;
-      padding: .5rem;
-      font-size: 1.1rem;
-      cursor: pointer;
+    font-size: 1rem;
   }
-  
-  .tab.selected {
-      background-color: #c4a2a2;
+  .btn-edit {
+    width: 100px;
   }
+}
+
+@media (max-width: 400px) {
+  .profile {
+    padding: 1rem;
+  }
+  .tabs {
+    overflow-x: auto;
+    width: 250px;
+  }
+}

@@ -12,7 +12,7 @@ const PostStars = ({ value, onClick }) => {
                   cursor: 'pointer',
                   color: i <= value ? 'gold' : 'gray',
                   display: 'inline-block',
-                  fontSize: '28px'
+                  fontSize: '30px'
                 }}
               >
                 ★
