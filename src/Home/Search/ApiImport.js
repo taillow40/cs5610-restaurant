@@ -5,7 +5,9 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import * as restaurantClient from 'src/store/restaurants';
 import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter} from './searchReducer'
-
+import { FaExternalLinkAlt } from "react-icons/fa";
+import { FaCloudDownloadAlt } from "react-icons/fa";
+import './APIImport.css'
 function SearchComponent() {
   const navigate = useNavigate();
   const {searchName2, cuisine, zipCode, city, streetAddress} = useSelector((state) => state.search);
@@ -16,6 +18,7 @@ function SearchComponent() {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/yelp/search?term=${searchName}&location=${zipCode || city || 'null'}`);
       setRestaurants(response.data.businesses);
+      console.log(response.data.businesses)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -34,17 +37,21 @@ function SearchComponent() {
   return (
     <div>
       <div>Unable to find matching restaurant</div>
-      <div>Search the web?</div>
-      <button onClick={handleSearch}>Search</button>
-      <div>
+      <div className="apiSearchText">Search the web?</div>
+      <button className="apiSearchButton" onClick={handleSearch}>Search <FaExternalLinkAlt className="apiSearchIcon"/></button>
+      <hr className='apiSearchHr'></hr>
+      <ul className="apiImportList">
         {restaurants.map((restaurant) => (
-          <div key={restaurant.id}>
-            <span>{restaurant.name}</span>
-            <button onClick={addRestaurant(restaurant.id)}>Add</button>
-            </div>
+          <li className='apiImportItem' key={restaurant.id}>
+            <Link className='apiImportLink' onClick={addRestaurant(restaurant.id)}>
+              <div>{restaurant.name}</div>
+              <div>{restaurant.location?.address1}, {restaurant.location?.city}</div>
+              <FaCloudDownloadAlt className="apiDownloadIcon"/>
+            </Link>
+          </li>
 
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
