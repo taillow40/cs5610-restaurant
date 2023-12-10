@@ -158,10 +158,10 @@ function Public() {
             <div>Email</div>
             <div>{profile.email}</div>
           </section>
-          {/* <section>
+          <section>
             <div>Phone number</div>
             <div>{profile.phone_number}</div>
-          </section> */}
+          </section>
           <section>
             <div>User Type</div>
             <div>{profile.type}</div>
@@ -170,15 +170,10 @@ function Public() {
             <div>Favorite Cuisine</div>
             <div>{profile.cuisine}</div>
           </section>
-          <section className="url-sec">
+          <section>
             <div>Profile URL:</div>
-            <div
-              className="url-parent-child"
-              style={{ display: "inline-flex", gap: "1rem" }}
-            >
-              <div className="clip-text">
-                <strong>{window.location.href}</strong>
-              </div>{" "}
+            <div style={{ display: "inline-flex", gap: "1rem" }}>
+              <strong>{window.location.href}</strong>{" "}
               <button
                 className="btn-copy"
                 onClick={() => {
