@@ -8,10 +8,26 @@
     flex-direction: row; 
 }
 
+.right-button {
+    float: right;
+    background-color: #20A0D8;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.right-button:hover {
+    text-decoration: none;
+    color: black;
+    background-color: #34ACE1;
+}
+
 .restaurant-card {
     background-color: #5dc380;
     text-align: left;
     margin:50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     padding:20px;
     border-radius:10px;
     /* height: 600px; */

@@ -26,9 +26,9 @@ function HeaderBox({restaurant, reviews }) {
 
     return (
         <div>
+            <Link className="right-button" to={`/restaurant/${restaurant._id}/review`}>Write a Review</Link>
             <h1>{restaurant.name}</h1>
             <h6>{displayCuisines}</h6>
-            <Link to={`/restaurant/${restaurant._id}/review`}>Write a Review</Link>
             <PostStars value={averageRating}/> {averageRating.toFixed(1)}/5, {reviews.length} reviews.
             <h6>{restaurant.streetAddress}</h6>
             <h6>{restaurant.City}</h6>

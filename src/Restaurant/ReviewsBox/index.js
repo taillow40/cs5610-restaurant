@@ -8,13 +8,10 @@ function ReviewsBox({ restaurant, reviews }) {
     console.log(reviews)
     return (
         <div>
+            <Link className="right-button" to={`/restaurant/${restaurant._id}/review`}>Write a Review</Link>
             <h2>
                 Reviews
             </h2>
-
-            <Link to={`/restaurant/${restaurant._id}/review`}>
-                <button>Write a review</button>
-            </Link>
 
             <hr/>
             <PostsList restaurant={restaurant} reviews={reviews}/>
