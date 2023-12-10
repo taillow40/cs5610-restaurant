@@ -80,6 +80,14 @@ h1{
     display: flex;
     gap: 10px;
   }
+
+  .addedAllergy button{
+    height: 50px;
+  }
+
+  .addedAllergy{
+    display: flex;
+  }
   
   .addAllergy button {
     padding: 10px;

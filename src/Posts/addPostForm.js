@@ -120,6 +120,16 @@ const AddPostForm = ({ restaurantId }) => {
     setShowAllergyRating(true);
   };
 
+  const removeAllergyRating = (allergy) => {
+    setAllergyRatings((prevRatings) => {
+      const updatedRatings = { ...prevRatings };
+      delete updatedRatings[allergy.toLowerCase().replace("-", "_")];
+      return updatedRatings;
+    });
+    setSelectedAllergies((prevSelectedAllergies) =>
+      prevSelectedAllergies.filter((selectedAllergy) => selectedAllergy !== allergy)
+    );
+  };
   return (
     <div className="formContainer">
       <form className="postForm">
@@ -199,8 +209,10 @@ const AddPostForm = ({ restaurantId }) => {
           </button>
         </div>
         {selectedAllergies.map((allergy) => (
-          <div key={allergy}>
-            <label>Rate {allergy}:</label>
+          <div className="addedAllergy" key={allergy}>
+             <div>
+              <label>Rate {allergy}:</label>
+           
             <PostStars
               value={allergyRatings[allergy.toLowerCase().replace("-", "_")]}
               onClick={(rating) =>
@@ -210,6 +222,15 @@ const AddPostForm = ({ restaurantId }) => {
                 }))
               }
             />
+            </div>
+            <button
+              className="btn btn-danger"
+              type="button"
+              onClick={() => removeAllergyRating(allergy)}
+            >
+              Remove Rating
+            </button>
+
           </div>
         ))}
         </div>
