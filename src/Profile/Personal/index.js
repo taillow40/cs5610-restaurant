@@ -62,21 +62,21 @@ function Personal() {
 
   const fetchReviews = async (profileId) => {
     const fetchedProfile = await client.account();
-    const reviews = await client.reviews(fetchedProfile.data._id);
+    const reviews = await client.reviews(fetchedProfile.data?._id);
     setReviews(reviews);
   };
 
   const getFollowersOfUser = async () => {
     const fetchedProfile = await client.account();
     const followersOfPerson = await follows.findUserFollowers(
-      fetchedProfile.data._id
+      fetchedProfile.data?._id
     );
     setFollowers(followersOfPerson?.map((f) => f.user));
   };
   const getFollowingsOfUser = async () => {
     const fetchedProfile = await client.account();
     const followersOfPerson = await follows.findUserFollowings(
-      fetchedProfile.data._id
+      fetchedProfile.data?._id
     );
     setFollowings(followersOfPerson?.map((f) => f.followings)[0]);
   };
@@ -474,9 +474,9 @@ function Personal() {
           <ol>
             {restaurants?.map((result) => {
               return (
-                <Link key={result._id} to={`/restaurant/${result._id}`}>
+                <Link key={result?._id} to={`/restaurant/${result?._id}`}>
                   <li
-                    key={result._id}
+                    key={result?._id}
                     className="restaurantList"
                     style={{
                       listStyle: "",
@@ -484,7 +484,7 @@ function Personal() {
                   >
                     <h3 style={{ color: "blue" }}>{result.name}</h3>
                     <button
-                      onClick={(e) => detectFavUnFavButton(e, result._id)}
+                      onClick={(e) => detectFavUnFavButton(e, result?._id)}
                     >
                       Toggle Favorite
                     </button>
@@ -505,10 +505,10 @@ function Personal() {
         {selected === 2 && (
           <ul className="profile__friends__list">
             {followers?.map((friend) => (
-              <li key={friend._id}>
+              <li key={friend?._id}>
                 <aside
                   className="profile-card"
-                  onClick={() => navigate(`/profile/${friend._id}`)}
+                  onClick={() => navigate(`/profile/${friend?._id}`)}
                 >
                   <div
                     className="dp"
@@ -531,10 +531,10 @@ function Personal() {
         {selected === 3 && (
           <ul className="profile__friends__list">
             {followings?.map((friend) => (
-              <li key={friend._id}>
+              <li key={friend?._id}>
                 <aside
                   className="profile-card"
-                  onClick={() => navigate(`/profile/${friend._id}`)}
+                  onClick={() => navigate(`/profile/${friend?._id}`)}
                 >
                   <div
                     className="dp"
@@ -558,7 +558,7 @@ function Personal() {
           <ul className="profile__comments__list">
             {reviews &&
               reviews?.map((review) => (
-                <li key={review._id}>{review.content}</li>
+                <li key={review?._id}>{review.content}</li>
               ))}
           </ul>
         )}
