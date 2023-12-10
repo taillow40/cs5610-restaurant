@@ -5,3 +5,21 @@
   padding: 5px;
   /* list-style: decimal; */
 }
+
+.searchBarContainer{
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
+.searchForm{
+  width: 70%;
+}
+
+.filters{
+  width: 30%;
+}
+
+button{
+  margin-bottom: 10px;
+}
