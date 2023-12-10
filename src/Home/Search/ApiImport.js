@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,11 +18,16 @@ function SearchComponent() {
     try {
       const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/yelp/search?term=${searchName}&location=${zipCode || city || 'null'}`);
       setRestaurants(response.data.businesses);
-      console.log(response.data.businesses)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+
+  useEffect(() => {
+    if (restaurants.length > 0) {
+        window.scrollBy(0, 200);
+    }
+}, [restaurants]);
 
   const addRestaurant = (id) => async () => {
     try{
