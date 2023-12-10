@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter, searchAsync, sortRating, sortDistance} from './searchReducer'
 import {useNavigate} from "react-router-dom";
+import './styling/search.css';
 
 const SearchBar = () => {
   //const [searchTerm, setSearchTerm] = useState('');
@@ -16,7 +17,7 @@ const SearchBar = () => {
   const dispatch = useDispatch();
   let {name, cuisine, zipCode, city, streetAddress, sortByRating: sortChecked, sortByDistance: sortDist } = useSelector((state) => state.search);
 
-  if(name == null){
+  /*if(name == null){
     name = '';
   }
   if(cuisine == null){
@@ -36,7 +37,7 @@ const SearchBar = () => {
   }
   if(sortDist == null){
     sortDist = false;
-  }
+  }*/
 
 
   console.log(name, cuisine, zipCode);
@@ -124,7 +125,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div style={{width: "100%"}}>
+    <div className='searchForm'>
       <label htmlFor='name'>Restaurant Name</label>
         <input
           style={searchStyle}
@@ -142,7 +143,7 @@ const SearchBar = () => {
       <input style={searchStyle} id="city" type="text" placeholder="Search by City" value={city} onChange={(e) => handleCityChange(e.target.value)} />
       <label htmlFor='address'>Address</label>
       <input style={searchStyle} id="address" type="text" placeholder="Search by Street Address" value={streetAddress} onChange={(e) => handleStreetAddressChange(e.target.value)} />
-      <div>
+      <div className="filters">
       <label>
           Clear Sorts
           <input

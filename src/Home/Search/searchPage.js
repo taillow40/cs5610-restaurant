@@ -237,7 +237,9 @@ const SearchPage = () => {
     <div className="container">
       <h1>Search</h1>
       <p>Search for the best restaurants that cater to your needs!</p>
-      <SearchBar />
+      <div>
+        <SearchBar />
+      </div>
       <div>
         <h3>Search Results:</h3>
         {searchResults?.length === 0 ? (
