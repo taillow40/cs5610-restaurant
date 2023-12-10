@@ -24,51 +24,97 @@ h1{
     align-items: center;
 }
 
-.formContainer{
-    margin: 10px;
-    padding: 10px;
-    width: 60%;
-}
-
-form input, form label, form select{
-    margin-top: 5px;
-}
-
-form button{
-    margin: 10px 0px;
-    width: 200px;
-}
-
-.postForm{
+.formContainer {
+    width: 80%;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  
+  .postForm {
     display: flex;
     flex-direction: column;
-}
-
-.postButton{
-
-    margin-top: 20px;
-
-}
-
-.allergySection{
-    background-color: lightgray;
+    gap: 20px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .checkboxContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .postButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .postButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .allergySection {
     display: flex;
     flex-direction: column;
-    padding: 10px;
-}
-
-.allergySection select{
-    width: 50%;
-}
-
-
-.allergySection button{
-    width: 30%;
-    margin-left: 20px;
-    height: 40px;
-}
-
-.addAllergy{
+    gap: 20px;
+  }
+  
+  .addAllergy {
     display: flex;
-}
+    gap: 10px;
+  }
+  
+  .addAllergy button {
+    padding: 10px;
+  }
+  
+  #allergyDropdown {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
 
+  .allergyRatings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Add media queries for responsiveness */
+  @media only screen and (max-width: 768px) {
+    .formContainer {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .addAllergy {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100vw;
+        align-items: baseline;
+      }
+
+      #allergyDropdown{
+        width: 50vw;
+      }
+  }
