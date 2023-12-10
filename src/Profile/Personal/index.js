@@ -504,7 +504,7 @@ function Personal() {
         )}
         {selected === 2 && (
           <ul className="profile__friends__list">
-            {followers.map((friend) => (
+            {followers?.map((friend) => (
               <li key={friend._id}>
                 <aside
                   className="profile-card"
@@ -530,7 +530,7 @@ function Personal() {
         )}
         {selected === 3 && (
           <ul className="profile__friends__list">
-            {followings.map((friend) => (
+            {followings?.map((friend) => (
               <li key={friend._id}>
                 <aside
                   className="profile-card"
