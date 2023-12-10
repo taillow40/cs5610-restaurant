@@ -171,7 +171,7 @@ function Public() {
             <div>{profile.cuisine}</div>
           </section>
           <section>
-            <div>Profile URL:</div>
+            {/* <div>Profile URL:</div>
             <div style={{ display: "inline-flex", gap: "1rem" }}>
               <strong>{window.location.href}</strong>{" "}
               <button
@@ -189,7 +189,7 @@ function Public() {
               >
                 Copy URL
               </button>
-            </div>
+            </div> */}
           </section>
           <button
             className="btn-edit"

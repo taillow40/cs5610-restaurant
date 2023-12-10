@@ -29,8 +29,40 @@
 .btn-copy {
   background-color: green;
   color: #fff;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   outline: none;
   border: none;
-  padding: .35rem 1.2rem;
+  padding: 0.35rem 1.2rem;
+}
+
+@media (max-width: 500px) {
+  .profile-card {
+    max-width: 150px;
+  }
+
+  .dp {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .url-sec {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .url-parent-child {
+    display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .clip-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
