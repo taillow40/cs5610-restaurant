@@ -6,19 +6,6 @@ import * as follows from "src/store/follows";
 import * as favorites from "src/store/favorites";
 import * as likes from "src/store/albums";
 import { useState, useEffect } from "react";
-// Comment out for not getting used
-// import {
-//     addProfile,
-//     deleteProfile,
-//     updateProfile,
-//     setProfile,
-// } from "src/Profile/profilesReducer";
-// import {
-//     addComment,
-//     deleteComment,
-//     updateComment,
-//     setComment,
-// } from "src/Comment/commentsReducer";
 import "./index.css";
 import StarRating from "src/Home/Search/starRating";
 const colors = [
@@ -183,10 +170,15 @@ function Public() {
             <div>Favorite Cuisine</div>
             <div>{profile.cuisine}</div>
           </section>
-          <section>
+          <section className="url-sec">
             <div>Profile URL:</div>
-            <div style={{ display: "inline-flex", gap: "1rem" }}>
-              <strong>{window.location.href}</strong>{" "}
+            <div
+              className="url-parent-child"
+              style={{ display: "inline-flex", gap: "1rem" }}
+            >
+              <div className="clip-text">
+                <strong>{window.location.href}</strong>
+              </div>{" "}
               <button
                 className="btn-copy"
                 onClick={() => {
