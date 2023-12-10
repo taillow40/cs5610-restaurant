@@ -19,15 +19,17 @@ const PostsList = ({reviews}) => {
     };
 
     const renderedReviews = orderedReviews.map(review => (
-        <div className="restaurantCard" key={review._id}>
+        <div className="reviewCard" key={review._id}>
 
             <h3>{review.restaurant}</h3>
             <h3>Overall Rating</h3>
             <PostStars value={review.rating} onClick={() => {}} />
-            {review.content_accomodations.length > 0 && review.content_accomodations.substring(0, 100)}
+            <h3>Review</h3>
+            <p>{review.content.substring(0, 100)}</p>
             {hasAccommodations(review.accomodations) && (
             <div>
               <h3>Accommodations</h3>
+                {review.content_accomodations.length > 0 && review.content_accomodations.substring(0, 100)}
                 {Object.entries(review.accomodations).map(([allergy, rating]) => (
                 rating !== 0 && (
                 <div key={allergy}>
@@ -38,7 +40,6 @@ const PostsList = ({reviews}) => {
               ))}
             </div>
           )}
-            <p>{review.content.substring(0, 100)}</p>
             <p><PostAuthor authorId={review.user_id} />
             <Time timestamp={review.date}/>
             </p>
@@ -47,8 +48,7 @@ const PostsList = ({reviews}) => {
     ))
 
   return (
-    <div>
-        <h2>Featured Reviews</h2>
+    <div className='allReviews'>
         {renderedReviews}
     </div>
   )
