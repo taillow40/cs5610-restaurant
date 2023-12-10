@@ -24,6 +24,7 @@
 
 .restaurant-card {
     background-color: #5dc380;
+    border-radius: 15px;
     text-align: left;
     margin:50px;
     margin-top: 20px;
