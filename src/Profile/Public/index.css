@@ -1,69 +1,36 @@
 .profile-card {
-    box-shadow: 1px 2px 3px 1px #ddd;
-    padding: 1.2rem;
-    max-width: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  .dp {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: lightblue;
-    display: inline-grid;
-    place-items: center;
-    margin-bottom: 1.5rem;
-    color: #fff;
-  }
-  
-  .name {
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-transform: capitalize;
-  }
-  
-  .btn-copy {
-    background-color: green;
-    color: #fff;
-    border-radius: 0.25rem;
-    outline: none;
-    border: none;
-    padding: 0.35rem 1.2rem;
-  }
-  
-  @media (max-width: 500px) {
-    .profile-card {
-      max-width: 150px;
-    }
-  
-    .dp {
-      width: 50px;
-      height: 50px;
-    }
-  }
-  
-  @media (max-width: 1024px) {
-    .url-sec {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: flex-start !important;
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .url-parent-child {
-      display: inline-flex;
-      flex-direction: column;
-      width: 100%;
-    }
-    .clip-text {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  
+  box-shadow: 1px 2px 3px 1px #ddd;
+  padding: 1.2rem;
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dp {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: lightblue;
+  display: inline-grid;
+  place-items: center;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+.name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.btn-copy {
+  background-color: green;
+  color: #fff;
+  border-radius: .25rem;
+  outline: none;
+  border: none;
+  padding: .35rem 1.2rem;
+}
