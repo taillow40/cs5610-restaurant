@@ -106,6 +106,21 @@ h1{
       padding: 10px;
     }
 
+    .allReviews{
+        padding: 5px;
+    }
+
+    .reviewCard {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+    
+
     .addAllergy {
         display: flex;
         flex-direction: column;

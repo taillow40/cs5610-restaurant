@@ -11,9 +11,8 @@
 .restaurant-card {
     background-color: #5dc380;
     text-align: left;
-    margin:50px;
+    margin-bottom: 20px;
     padding:20px;
-    border-radius:10px;
     /* height: 600px; */
     object-fit: cover;
 }
@@ -34,4 +33,11 @@
     bottom: 80px;
     left: 80px;
     padding: 50px;
+}
+
+@media only screen and (max-width: 768px) {
+    .restaurant-card {
+        padding: 10px;
+    }
+
 }
