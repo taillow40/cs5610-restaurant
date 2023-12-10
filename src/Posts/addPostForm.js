@@ -9,6 +9,7 @@ import PostStars from "./postStars";
 import * as restaurantClient from "src/store/restaurants";
 import * as reviewClient from "src/store/reviews";
 import { set } from "date-fns";
+import Switch from 'react-switch';
 
 const AddPostForm = ({ restaurantId }) => {
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -150,15 +151,20 @@ const AddPostForm = ({ restaurantId }) => {
         />
         <label htmlFor="rating">Rating:</label>
         <PostStars value={rating} onClick={setRating} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '400px', paddingTop: '20px', paddingBottom: '20px' }}>
+        <div>
         <div className="allergySection"> 
-        <label style={{width: '700px'}} htmlFor="enableAccomodations">Describe Accommodations?</label>
-        <input 
-            type="checkbox" 
-            id="enableAccomodations" 
-            checked={writeAccomodation} 
-            onChange={toggleAccomodationInput} 
-        />
+        <label htmlFor="enableAccomodations">Describe Accommodations?</label>
+        <Switch
+              onChange={toggleAccomodationInput}
+              checked={writeAccomodation}
+              onColor="#007BFF"
+              offColor="#ccc"
+              onHandleColor="#fff"
+              offHandleColor="#fff"
+              handleDiameter={24}
+              uncheckedIcon={false}
+              checkedIcon={false}
+            />
         {writeAccomodation && <label htmlFor="accomContent">Accommodation Review:</label>}
         {writeAccomodation && <textarea
           id="accomContent"
