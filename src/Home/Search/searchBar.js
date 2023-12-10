@@ -144,30 +144,14 @@ const SearchBar = () => {
       <label htmlFor='address'>Address</label>
       <input style={searchStyle} id="address" type="text" placeholder="Search by Street Address" value={streetAddress} onChange={(e) => handleStreetAddressChange(e.target.value)} />
       <div className="filters">
-      <label>
-          Clear Sorts
-          <input
-            type="radio"
-            name="sortOption"
-            onChange={() => handleSortChange("none")}
-          />
-        </label>
         <label>
-          Sort by Rating
-          <input
-            type="radio"
-            name="sortOption"
-            onChange={() => handleSortChange("rating")}
-          />
-        </label>
-        <label>
-          Sort by Distance
-          <input
-            type="radio"
-            name="sortOption"
-            onChange={() => handleSortChange("distance")}
-          />
-        </label>
+            Sort by
+            <select onChange={(e) => handleSortChange(e.target.value)}>
+              <option value="none">None</option>
+              <option value="rating">Rating</option>
+              <option value="distance">Distance</option>
+            </select>
+          </label>
       </div>
       <button style={buttonStyle} onClick={handleSearch}>
         Search

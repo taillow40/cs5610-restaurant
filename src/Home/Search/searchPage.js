@@ -23,6 +23,8 @@ import * as favoriteAPI from "src/store/favorites";
 import * as client from "src/store/api";
 import "./styling/search.css";
 import axios from "axios";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SearchPage = () => {
   const dispatch = useDispatch();
@@ -240,7 +242,7 @@ const SearchPage = () => {
       <div>
         <SearchBar />
       </div>
-      <div>
+      <div className="results">
         <h3>Search Results:</h3>
         {searchResults?.length === 0 ? (
           <ApiImport />
@@ -251,13 +253,14 @@ const SearchPage = () => {
               sortedResults.map((result, index) => (
                 <Link key={result._id} to={`/restaurant/${result._id}`}>
                   <li key={result._id} className="restaurantList">
-                    <h3 style={{ color: "blue" }}>{result.name}</h3>
-                    <button onClick={(e) => detectFavUnFavButton(e, result._id)}>
+                    <h3 style={{ color: "blue" }}>{index + 1 + ". " + result.name}</h3>
+                    <button onClick={(e) => detectFavUnFavButton(e, result._id)} className="btn btn-info">
                       Toggle Favorite
+                      <FontAwesomeIcon icon={faHeart} color={result.isFavorite ? "red" : "gray"} style={{marginLeft: "5px"}} />
                     </button>
                     <div className="d-flex">
                       <StarRating rating={result.averageRating} />{" "}
-                      <p>{result.reviews.length} reviews</p>
+                      <p style={{marginLeft: "5px"}}>{result.reviews.length} reviews</p>
                     </div>
                     <strong>
                       {searchDistance.length === 0
@@ -278,13 +281,14 @@ const SearchPage = () => {
               searchResults.map((result, index) => (
                 <Link key={result._id} to={`/restaurant/${result._id}`}>
                   <li key={result._id} className="restaurantList">
-                    <h3 style={{ color: "blue" }}>{result.name}</h3>
-                    <button onClick={(e) => detectFavUnFavButton(e, result._id)}>
+                    <h3 style={{ color: "blue" }}>{index + 1 + ". " + result.name}</h3>
+                    <button onClick={(e) => detectFavUnFavButton(e, result._id)} className="btn btn-info">
                       Toggle Favorite
+                      <FontAwesomeIcon icon={faHeart} color={result.isFavorite ? "red" : "gray"} style={{marginLeft: "5px"}}/>
                     </button>
                     <div className="d-flex">
-                      <StarRating rating={result.averageRating} />{" "}
-                      <p>{result.reviews.length} reviews</p>
+                      <StarRating rating={result.averageRating} style={{marginRight: "10px"}} />{" "}
+                      <p style={{marginLeft: "5px"}}>{result.reviews.length} reviews</p>
                     </div>
                     <strong>
                       {searchDistance.length === 0
@@ -296,7 +300,11 @@ const SearchPage = () => {
                     <h5>
                       {result.streetAddress}, {result.City}, {result.zipCode}
                     </h5>
-                    <h5>{result.cuisine}</h5>
+                   
+                        <h5>
+                            {cuisine}
+                        </h5>
+             
                   </li>
                 </Link>
               ))
