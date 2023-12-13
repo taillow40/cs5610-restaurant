@@ -1,28 +1,143 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as client from "src/store/api";
+import * as favoriteAPI from "src/store/favorites";
+import * as follows from "src/store/follows";
 import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import "./index.css";
 import Cookies from "js-cookie";
+import StarRating from "src/Home/Search/starRating";
 
+const colors = [
+  "blue",
+  "red",
+  "green",
+  "lightblue",
+  "darkyellow",
+  "orange",
+  "purple",
+  "darkgreen",
+  "maroon",
+  "darkred",
+];
 function Personal() {
+  const navigate = useNavigate();
   const cookieToken = Cookies.get("user");
   const [profile, setProfile] = useState(null);
-  const navigate = useNavigate();
+  const [restaurants, setrestaurants] = useState([]);
+  const [tabs] = useState([
+    { text: "Favorite Restaurants", id: 1 },
+    { text: "Followers", id: 2 },
+    { text: "Followings", id: 3 },
+    { text: "Reviews", id: 4 },
+  ]);
+  const [reviews, setReviews] = useState([]);
 
+  const [selected, setSelected] = useState(null);
+  const [followers, setFollowers] = useState([]);
+  const [followings, setFollowings] = useState([]);
   useEffect(() => {
     const fetchProfile = async () => {
       const fetchedProfile = await client.account();
       if (fetchedProfile) {
         setProfile(fetchedProfile?.data);
+        fetchUserFavs(fetchedProfile?.data?._id);
       } else {
         navigate("/login");
       }
     };
     fetchProfile();
+    getFollowersOfUser();
+    getFollowingsOfUser();
+    fetchReviews();
   }, [cookieToken, navigate]);
+  const [user, setUser] = useState(null);
 
-  
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const getUserData = async () => {
+    try {
+      const fetchedProfile = await client.account();
+      if (!fetchedProfile?.data) return navigate("/login");
+      if (fetchedProfile?.data) setUser(fetchedProfile?.data);
+    } catch (error) {}
+  };
+  const fetchUserFavs = async (profileId) => {
+    try {
+      if (!profileId) return;
+      const response = await favoriteAPI.onGetUserFavoritesFull(profileId);
+      setrestaurants(response?.restaurants);
+    } catch (error) {}
+  };
+
+  const fetchReviews = async (profileId) => {
+    try {
+      const fetchedProfile = await client.account();
+      if (!fetchedProfile?.data) return;
+      const reviews = await client.reviews(fetchedProfile.data?._id);
+      setReviews(reviews);
+    } catch (error) {
+      console.log("reviews error :: ", error);
+    }
+  };
+
+  const getFollowersOfUser = async () => {
+    try {
+      const fetchedProfile = await client.account();
+      if (!fetchedProfile?.data) return;
+      const followersOfPerson = await follows.findUserFollowers(
+        fetchedProfile.data?._id
+      );
+      setFollowers(followersOfPerson?.map((f) => f.user));
+    } catch (error) {
+      console.log("follow error :: ", error);
+    }
+  };
+
+  const getFollowingsOfUser = async () => {
+    try {
+      const fetchedProfile = await client.account();
+      if (!fetchedProfile?.data) return;
+      const followersOfPerson = await follows.findUserFollowings(
+        fetchedProfile.data?._id
+      );
+      setFollowings(followersOfPerson?.map((f) => f.followings)[0]);
+    } catch (error) {
+      console.log("follower error :: ", error);
+    }
+  };
+
+  const detectFavUnFavButton = async (e, resId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const fetchedProfile = await client.account();
+    if (!fetchedProfile?.data) return navigate("/login");
+    const userId = fetchedProfile?.data?._id;
+    const response = await favoriteAPI.onGetUserFavorites(userId);
+    const restaurant = response.restaurants?.find((res) => res == resId);
+    return restaurant ? onRemoveFromFav(e, resId) : onAddToFav(e, resId);
+  };
+  const onAddToFav = async (e, restaurantId) => {
+    const fetchedProfile = await client.account();
+    if (!fetchedProfile?.data) return navigate("/login");
+    const userId = fetchedProfile?.data?._id;
+    await favoriteAPI.onAddToFavorites({
+      userId,
+      restaurantId,
+    });
+    alert("Added to favorites");
+  };
+  const onRemoveFromFav = async (e, restaurantId) => {
+    const fetchedProfile = await client.account();
+    const userId = fetchedProfile?.data?._id;
+    await favoriteAPI.onRemoveFromFavorites({
+      userId,
+      restaurantId,
+    });
+    alert("Removed from favorites");
+  };
 
   const [p, setP] = useState({
     email: "",
@@ -44,8 +159,13 @@ function Personal() {
     type: "USER",
   });
   const updateModalRef = useRef(null);
-
-
+  const avgRating = (rating) => {
+    let sum = 0;
+    for (var i = 0; i < rating.length; i++) {
+      sum += rating[i];
+    }
+    return sum / rating.length;
+  };
   return (
     <div className="profile">
       {profile && (
@@ -55,24 +175,42 @@ function Personal() {
             Welcome, {profile?.first_name} {profile?.last_name}
           </h3>
           {profile && (
-            <div className="profile-grid">
-              <span className="profile__first-name">
-                first_name: {profile.first_name}
-              </span>
-              <span className="profile__last-name">
-                last_name: {profile.last_name}
-              </span>
-              <span className="profile__phone">email: {profile.email}</span>
-              <span className="profile__email">
-                phone_number: {profile.phone_number}
-              </span>
-              <span className="profile__email">user_type: {profile.type}</span>
-              <span className="profile__email">
-                Favorite Cousine: {profile.cuisine}
-              </span>
-
+            <div className="public-profile">
+              {user?.type === "RESTAURANT" ? (
+                <section>
+                  <div>Restaurant name</div>
+                  <div>{profile.first_name}</div>
+                </section>
+              ) : (
+                <React.Fragment>
+                  <section>
+                    <div>First name</div>
+                    <div>{profile.first_name}</div>
+                  </section>
+                  <section>
+                    <div>Last name</div>
+                    <div>{profile.last_name}</div>
+                  </section>
+                </React.Fragment>
+              )}
+              <section>
+                <div>Email</div>
+                <div>{profile.email}</div>
+              </section>
+              <section>
+                <div>Phone number</div>
+                <div>{profile.phone_number}</div>
+              </section>
+              <section>
+                <div>User Type</div>
+                <div>{profile.type}</div>
+              </section>
+              <section>
+                <div>Favorite Cuisine</div>
+                <div>{profile.cuisine}</div>
+              </section>
               <button
-                className="profile__edit"
+                className="btn-edit"
                 onClick={() => navigate(`/profile/edit`)}
               >
                 Edit
@@ -112,34 +250,53 @@ function Personal() {
             </div>
             <div className="modal-body w-100">
               <div className="edit__grid">
-                <div className="edit__first-name">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    value={p.first_name}
-                    onChange={(e) =>
-                      setP({
-                        ...p,
-                        first_name: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="edit__last-name">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    value={p.last_name}
-                    onChange={(e) =>
-                      setP({
-                        ...p,
-                        last_name: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+                {user?.type === "RESTAURANT" ? (
+                  <div className="edit__first-name">
+                    <label>Restaurant Name</label>
+                    <input
+                      type="text"
+                      placeholder="Restaurant Name"
+                      value={p.first_name}
+                      onChange={(e) =>
+                        setP({
+                          ...p,
+                          first_name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                ) : (
+                  <React.Fragment>
+                    <div className="edit__first-name">
+                      <label>First Name</label>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        value={p.first_name}
+                        onChange={(e) =>
+                          setP({
+                            ...p,
+                            first_name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="edit__last-name">
+                      <label>Last Name</label>
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        value={p.last_name}
+                        onChange={(e) =>
+                          setP({
+                            ...p,
+                            last_name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </React.Fragment>
+                )}
                 <div className="mt-5">
                   <label>Email</label>
                   <input
@@ -217,8 +374,7 @@ function Personal() {
 
                     marginTop: "30px",
                   }}
-                >
-                </div>
+                ></div>
               </div>
             </div>
           </div>
@@ -255,34 +411,53 @@ function Personal() {
             </div>
             <div className="modal-body w-100">
               <div className="edit__grid">
-                <div className="edit__first-name">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    value={up.first_name}
-                    onChange={(e) =>
-                      setUp({
-                        ...up,
-                        first_name: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="edit__last-name">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    value={up.last_name}
-                    onChange={(e) =>
-                      setUp({
-                        ...up,
-                        last_name: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+                {user?.type === "RESTAURANT" ? (
+                  <div className="edit__first-name">
+                    <label> Name</label>
+                    <input
+                      type="text"
+                      placeholder="Restaurant Name"
+                      value={up.first_name}
+                      onChange={(e) =>
+                        setUp({
+                          ...up,
+                          first_name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                ) : (
+                  <React.Fragment>
+                    <div className="edit__first-name">
+                      <label>First Name</label>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        value={up.first_name}
+                        onChange={(e) =>
+                          setUp({
+                            ...up,
+                            first_name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="edit__last-name">
+                      <label>Last Name</label>
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        value={up.last_name}
+                        onChange={(e) =>
+                          setUp({
+                            ...up,
+                            last_name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </React.Fragment>
+                )}
                 <div className="mt-5">
                   <label>Email</label>
                   <input
@@ -356,6 +531,114 @@ function Personal() {
           </div>
         </div>
       </div>
+
+      <section className="tabs">
+        {React.Children.toArray(
+          tabs.map((tab) => (
+            <h3
+              className={`tab ${selected === tab.id && "selected"}`}
+              onClick={() => setSelected(tab.id)}
+            >
+              {tab.text}
+            </h3>
+          ))
+        )}
+      </section>
+
+      <section>
+        {selected === 1 && (
+          <ol>
+            {restaurants?.map((result) => {
+              return (
+                <Link key={result?._id} to={`/restaurant/${result?._id}`}>
+                  <li
+                    key={result?._id}
+                    className="restaurantList"
+                    style={{
+                      listStyle: "",
+                    }}
+                  >
+                    <h3 style={{ color: "blue" }}>{result.name}</h3>
+                    <button
+                      onClick={(e) => detectFavUnFavButton(e, result?._id)}
+                    >
+                      Toggle Favorite
+                    </button>
+                    <div className="d-flex">
+                      <StarRating rating={avgRating(result.reviews)} />{" "}
+                      <p>{result.reviews.length} reviews</p>
+                    </div>
+                    <h5>
+                      {result.streetAddress}, {result.City}, {result.zipCode}
+                    </h5>
+                    <h5>{result.cuisine}</h5>
+                  </li>
+                </Link>
+              );
+            })}
+          </ol>
+        )}
+        {selected === 2 && (
+          <ul className="profile__friends__list">
+            {followers?.map((friend) => (
+              <li key={friend?._id}>
+                <aside
+                  className="profile-card"
+                  onClick={() => navigate(`/profile/${friend?._id}`)}
+                >
+                  <div
+                    className="dp"
+                    style={{
+                      backgroundColor:
+                        colors[Math.floor(Math.random() * colors.length)],
+                    }}
+                  >
+                    {friend.first_name.slice(0, 1)}{" "}
+                    {friend.last_name.slice(0, 1)}
+                  </div>
+                  <div className="name">
+                    {friend.first_name} {friend.last_name}
+                  </div>
+                </aside>
+              </li>
+            ))}
+          </ul>
+        )}
+        {selected === 3 && (
+          <ul className="profile__friends__list">
+            {followings?.map((friend) => (
+              <li key={friend?._id}>
+                <aside
+                  className="profile-card"
+                  onClick={() => navigate(`/profile/${friend?._id}`)}
+                >
+                  <div
+                    className="dp"
+                    style={{
+                      backgroundColor:
+                        colors[Math.floor(Math.random() * colors.length)],
+                    }}
+                  >
+                    {friend.first_name.slice(0, 1)}{" "}
+                    {friend.last_name.slice(0, 1)}
+                  </div>
+                  <div className="name">
+                    {friend.first_name} {friend.last_name}
+                  </div>
+                </aside>
+              </li>
+            ))}
+          </ul>
+        )}
+        {selected === 4 && (
+          <ul className="profile__comments__list">
+            {reviews &&
+              reviews?.map((review) => (
+                <li key={review?._id}>{review.content}</li>
+              ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

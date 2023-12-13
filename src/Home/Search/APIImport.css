@@ -1,0 +1,55 @@
+.apiSearchText {
+    text-align: center;
+    padding-bottom: 20px;
+}
+.apiImportList {
+    list-style: none;
+    text-align: left;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+.apiImportLink:hover {
+    color: #20A0D8;
+
+}
+
+.apiImportItem {
+    outline: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 20px;
+    position: relative;
+    width: 110%;
+    left: -5%;
+}
+.apiSearchHr{
+    width: 150%;
+    margin-left: -25%;
+    color: black;
+    background-color: black;
+}
+
+.apiSearchButton {
+    background-color: #20A0D8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 5px;
+    position: relative;
+    left: 50%;
+    transform:translate(-50%,0);
+}
+
+.apiSearchIcon {
+    margin-left: 5px;
+    margin-bottom: 2px;
+}
+
+.apiDownloadIcon {
+    position:relative;
+    float: right;
+    margin-top: -50px;
+    font-size: 20px;
+}

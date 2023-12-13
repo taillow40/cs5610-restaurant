@@ -2,10 +2,16 @@
     color: #36454F;
 }
 
-.edit__grid {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 50px 50px;
+.profile-flex {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.w-1-2 {
+    width: 50%;
 }
 
 .edit__save {
@@ -19,6 +25,7 @@
 }
 
 .edit__cancel {
+    margin-left: 2rem;
     grid-column: 2/3;
     grid-row: n-1/n;
     background-color:#caad73;

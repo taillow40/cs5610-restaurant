@@ -1,18 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter} from './searchReducer'
+import {setSearchName, setCuisineFilter, setZipCodeFilter, setCityFilter, setStreetAddressFilter, searchAsync, sortRating, sortDistance} from './searchReducer'
+import {useNavigate} from "react-router-dom";
+import './styling/search.css';
 
 const SearchBar = () => {
   //const [searchTerm, setSearchTerm] = useState('');
   //const [searchResults, setSearchResults] = useState([]);
 
+  const navigate = useNavigate();
+
+  const [isChecked, setisChecked] = useState(false);
+  const [isCheckedDist, setisCheckedDist] = useState(false);
+
+
   const dispatch = useDispatch();
-  const {searchName, cuisine, zipCode, city, streetAddress} = useSelector((state) => state.search);
+  let {name, cuisine, zipCode, city, streetAddress, sortByRating: sortChecked, sortByDistance: sortDist } = useSelector((state) => state.search);
+
+  /*if(name == null){
+    name = '';
+  }
+  if(cuisine == null){
+    cuisine = '';
+  }
+  if(city == null){
+    city = '';
+  }
+  if(zipCode == null){
+    zipCode = '';
+  }
+  if(streetAddress == null){
+    streetAddress = '';
+  }
+  if(sortChecked == null){
+    sortChecked = false;
+  }
+  if(sortDist == null){
+    sortDist = false;
+  }*/
+
+
+  console.log(name, cuisine, zipCode);
 
   const handleNameChange = (event) => {
-    console.log(event.target.value);
+  //  console.log(event.target.value);
     dispatch(setSearchName(event.target.value));
-    console.log(`New Name: ${event.target.value}`);
+  //  console.log(`New Name: ${event.target.value}`);
   };
 
   const handleCuisineChange = (newCuisine) => {
@@ -30,6 +63,43 @@ const SearchBar = () => {
   const handleStreetAddressChange = (newStreetAddress) => {
     dispatch(setStreetAddressFilter(newStreetAddress));
   };
+
+  const handleSortChange = (sortBy) => {
+    if (sortBy === "rating") {
+      setisChecked(true);
+      setisCheckedDist(false);
+      dispatch(sortRating(true));
+      dispatch(sortDistance(false)); // Uncheck sortByDistance when selecting sortByRating
+    } else if (sortBy === "distance") {
+      setisChecked(false);
+      setisCheckedDist(true);
+      dispatch(sortDistance(true));
+      dispatch(sortRating(false)); // Uncheck sortByRating when selecting sortByDistance
+    }
+    else{
+      setisChecked(false);
+      setisCheckedDist(false);
+      dispatch(sortDistance(false));
+      dispatch(sortRating(false));
+    }
+  };
+
+  const handleSearch = () => {
+    dispatch(searchAsync());
+
+    navigate(
+      `/search?name=${name}&cuisine=${cuisine}&zipCode=${zipCode}&city=${city}&streetAddress=${streetAddress}&sortByRating=${isChecked}&sortByDistance=${isCheckedDist}`
+    );
+
+  };
+
+  /*useEffect(() => {
+    // Use useEffect to automatically trigger a search when sortChecked is false
+    if (!sortChecked) {
+      dispatch(searchAsync());
+    }
+  }, [sortChecked, dispatch]);
+*/
 
   const searchStyle = {
     width: "100%",
@@ -55,14 +125,14 @@ const SearchBar = () => {
   };
 
   return (
-    <div style={{width: "100%"}}>
+    <div className='searchForm'>
       <label htmlFor='name'>Restaurant Name</label>
         <input
           style={searchStyle}
           id="name"
           type="text"
           placeholder="Search by Restaurant Name"
-          value={searchName}
+          value={name}
           onChange={handleNameChange}
         />
       <label htmlFor='cuisine'>Cuisine</label>
@@ -73,6 +143,19 @@ const SearchBar = () => {
       <input style={searchStyle} id="city" type="text" placeholder="Search by City" value={city} onChange={(e) => handleCityChange(e.target.value)} />
       <label htmlFor='address'>Address</label>
       <input style={searchStyle} id="address" type="text" placeholder="Search by Street Address" value={streetAddress} onChange={(e) => handleStreetAddressChange(e.target.value)} />
+      <div className="filters">
+        <label>
+            Sort by
+            <select onChange={(e) => handleSortChange(e.target.value)}>
+              <option value="none">None</option>
+              <option value="rating">Rating</option>
+              <option value="distance">Distance</option>
+            </select>
+          </label>
+      </div>
+      <button style={buttonStyle} onClick={handleSearch}>
+        Search
+      </button>
     </div>
   );
 };

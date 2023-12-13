@@ -102,7 +102,6 @@ export const reviews = async (id) => {
 }
 
 export const addFriend = async (userId, friendId) => {
-  console.log(userId, friendId)
   const data = {
     userId: userId,
     friendId: friendId

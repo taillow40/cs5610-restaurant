@@ -1,7 +1,86 @@
 .restaurantList {
-  border: 1px solid gray;
-  border-radius: 10px;
-  margin: 10px;
-  padding: 5px;
-  /* list-style: decimal; */
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+.restaurantList h3 {
+  color: blue;
+}
+
+.restaurantList button {
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.searchBarContainer{
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
+.searchForm {
+  max-width: 600px; /* Set a maximum width for better readability on larger screens */
+  margin: 0 auto; /* Center the form horizontally */
+  padding: 20px; /* Add some padding for better spacing */
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.filters {
+  margin-top: 10px;
+}
+
+.searchForm > button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  margin-left: 0px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  width: 100%; /* Make the button full width */
+}
+
+.results{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1px solid black;
+  padding-top: 10px;
+}
+
+/* Responsive styles for small screens */
+@media screen and (max-width: 768px) {
+  .searchForm {
+    max-width: 100%; /* Allow the form to take full width on smaller screens */
+  }
+  
+  input {
+    margin-bottom: 10px; /* Reduce margin for smaller screens */
+  }
+  
+  .filters {
+    display: flex;
+    flex-direction: column; /* Stack the radio buttons vertically */
+  }
 }

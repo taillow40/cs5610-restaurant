@@ -1,19 +1,143 @@
-.restaurantCard {
-    width: 300px;
-    height: auto;
-    border: 1px solid black;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
+h1{
+    margin: 20px;
 }
 
-.postForm{
+.reviewCard {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 50%;
+}
+
+.allReviews{
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-.postButton{
-
-    margin-top: 20px;
-
+.addReviews{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+.formContainer {
+    width: 80%;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  
+  .postForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .checkboxContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .postButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .postButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .allergySection {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .addAllergy {
+    display: flex;
+    gap: 10px;
+  }
+
+  .addedAllergy button{
+    height: 50px;
+  }
+
+  .addedAllergy{
+    display: flex;
+  }
+  
+  .addAllergy button {
+    padding: 10px;
+  }
+  
+  #allergyDropdown {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  .allergyRatings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Add media queries for responsiveness */
+  @media only screen and (max-width: 768px) {
+    .formContainer {
+      width: 100%;
+      padding: 10px;
+    }
+
+    .allReviews{
+        padding: 5px;
+    }
+
+    .reviewCard {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+    
+
+    .addAllergy {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100vw;
+        align-items: baseline;
+      }
+
+      #allergyDropdown{
+        width: 50vw;
+      }
+  }

@@ -4,39 +4,51 @@ import { Link, useNavigate } from "react-router-dom";
 import * as client from "src/store/api";
 import Cookies from "js-cookie";
 import logo from "../assets/logo.jpeg";
+import "./nav.css";
 
 function Navbar({ validUser }) {
   const navigate = useNavigate();
 
   const logOut = async () => {
-    const logout = await client.logout();
-    if (logout) {
+    try {
+      await client.logout();
+    } catch (error) {
+    } finally {
       Cookies.remove("user");
       navigate("/login");
       window.location.reload();
     }
   };
   return (
-    <>
-      <nav
-        id="navbar"
-        style={{
-          zIndex: 10,
-        }}
-      >
-        <div className="navbar_container">
-          <div className="nav_left">
-            <Link to="/">
-              <div style={{ margin: 0 }}>
-                <img src={logo} height={"150px"} width={"150px"} />
-              </div>
-            </Link>
-          </div>
-          <div className="nav_right">
+    <nav id="navbar" className="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div className="container-fluid">
+        <Link to="/" className="navbar-brand">
+          <img
+            src={logo}
+            alt="Logo"
+            height="80"
+            className="d-inline-block align-top"
+          />
+        </Link>
+
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <div className="navbar-nav ms-auto">
             {!validUser ? (
               <div className="buttons">
                 <button
-                  className="login-btn"
+                  className="btn btn-outline-light me-2"
                   onClick={() => {
                     navigate("/login");
                   }}
@@ -44,7 +56,7 @@ function Navbar({ validUser }) {
                   Login
                 </button>
                 <button
-                  className="register-btn"
+                  className="btn btn-outline-light"
                   onClick={() => {
                     navigate("/signup");
                   }}
@@ -55,7 +67,7 @@ function Navbar({ validUser }) {
             ) : (
               <div className="buttons">
                 <button
-                  className="profile-btn"
+                  className="btn btn-outline-light me-2"
                   onClick={() => {
                     navigate("/profile");
                   }}
@@ -63,22 +75,22 @@ function Navbar({ validUser }) {
                   Profile
                 </button>
                 <button
-                  className="profile-btn"
+                  className="btn btn-outline-light me-2"
                   onClick={() => {
                     navigate("/admin");
                   }}
                 >
                   Admin
                 </button>
-                <button className="logout-btn" onClick={logOut}>
+                <button className="btn btn-outline-light me-2" onClick={logOut}>
                   Logout
                 </button>
               </div>
             )}
           </div>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 }
 
