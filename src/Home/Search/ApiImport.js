@@ -16,7 +16,7 @@ function SearchComponent() {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/yelp/search?term=${searchName}&location=${zipCode || city || 'null'}`);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/yelp/search?term=${searchName}&location=${zipCode || city || 'null'}`);
       setRestaurants(response.data.businesses);
     } catch (error) {
       console.error('Error fetching data:', error);

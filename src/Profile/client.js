@@ -1,6 +1,6 @@
 import axios from "axios";
 import { user } from "fontawesome";
-export const BASE_API = process.env.REACT_APP_BACKEND_URL;
+export const BASE_API = process.env.REACT_APP_BACKEND_BASE_URL;
 export const USERS_API = `${BASE_API}/api/users`;
 const request = axios.create({
   withCredentials: true,
