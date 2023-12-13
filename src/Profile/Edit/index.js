@@ -2,21 +2,47 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 import * as client from "src/store/api";
+import * as restaurantAPI from "src/store/restaurants";
 import Cookies from "js-cookie";
 
 function Edit() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [restaurant, setRestaurant] = useState(null);
+  useEffect(() => {
+    getUserData();
+  }, []);
 
+  const getUserData = async () => {
+    try {
+      const fetchedProfile = await client.account();
+      if (fetchedProfile?.data) setUser(fetchedProfile?.data);
+      if (fetchedProfile?.data?.restaurant) {
+        const fetchedRestaurant = await restaurantAPI.findRestaurantById(
+          fetchedProfile?.data?.restaurant
+        );
+        setRestaurant(fetchedRestaurant);
+      }
+    } catch (error) {
+      console.log("error in profile get :: ", error);
+    }
+  };
   const updateUser = async () => {
     try {
       const fetchedProfile = await client.account();
       const u = await client.updateUser(p);
-      if (fetchedProfile.data.type != "ADMIN" && u.type == "ADMIN") {
+      await restaurantAPI.updateRestaurant(restaurant);
+      if (
+        (user.type !== "USER" && u.type === "ADMIN") ||
+        (u.type !== "ADMIN" && user.type === "USER")
+      ) {
         Cookies.remove("user");
-        navigate("/login");
         window.location.reload();
+        navigate("/login");
         return;
       } else {
+        console.log("u :: ", u);
+        console.log("user :: ", user);
         navigate(`/profile`);
         window.location.reload();
       }
@@ -45,43 +71,138 @@ function Edit() {
     fetchProfile();
   }, [navigate]);
 
+  const getUserLocation = async (e) => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      const apiUrl = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("City:", data);
+          // You can use cityName or further process the data here
+          setRestaurant((p) => {
+            return {
+              ...p,
+              Long: longitude,
+              Lat: latitude,
+              streetAddress: data.display_name,
+              City: data?.address.district,
+            };
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    });
+  };
+
   return (
     <div className="profile">
       <h1>Edit Profile</h1>
-      <div className="profile-flex">
-        <div className="w-1-2">
-          <label>First Name</label>
-          <input
-            type="text"
-            placeholder="First Name"
-            value={p.first_name}
-            onChange={
-              (e) =>
-                setP({
-                  ...p,
-                  first_name: e.target.value,
-                })
-              //   dispatch(setProfile({ ...profile, first_name: e.target.value }))
-            }
-          />
+      {user?.type === "RESTAURANT" ? (
+        <React.Fragment>
+          <div className="profile-flex">
+            <div className="w-1-2">
+              <label>Restaurant Name</label>
+              <input
+                type="text"
+                placeholder="Restaurant Name"
+                value={p.first_name}
+                onChange={(e) =>
+                  setP({
+                    ...p,
+                    first_name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="w-1-2">
+              <label>Location:</label>
+              <button type="button" onClick={getUserLocation}>
+                Get Location
+              </button>
+            </div>
+          </div>
+          <div className="profile-flex">
+            <div className="w-1-2">
+              <label>City:</label>
+              <input
+                required
+                type="text"
+                value={restaurant?.City}
+                onChange={(e) =>
+                  setRestaurant({ ...restaurant, City: e.target.value })
+                }
+              />
+            </div>
+            <div className="w-1-2">
+              <label>Zip Code:</label>
+              <input
+                required
+                type="text"
+                value={restaurant?.zipCode}
+                onChange={(e) =>
+                  setRestaurant({ ...restaurant, zipCode: e.target.value })
+                }
+              />
+            </div>
+          </div>
+          <div className="profile-flex">
+            <div className="w-1-2">
+              <label>Street Address:</label>
+              <input
+                required
+                type="text"
+                value={restaurant?.streetAddress}
+                onChange={(e) =>
+                  setRestaurant({
+                    ...restaurant,
+                    streetAddress: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+        </React.Fragment>
+      ) : (
+        <div className="profile-flex">
+          <div className="w-1-2">
+            <label>First Name</label>
+            <input
+              type="text"
+              placeholder="First Name"
+              value={p.first_name}
+              onChange={
+                (e) =>
+                  setP({
+                    ...p,
+                    first_name: e.target.value,
+                  })
+                //   dispatch(setProfile({ ...profile, first_name: e.target.value }))
+              }
+            />
+          </div>
+          <div className="w-1-2">
+            <label>Last Name</label>
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={p.last_name}
+              onChange={
+                (e) =>
+                  setP({
+                    ...p,
+                    last_name: e.target.value,
+                  })
+                //   dispatch(setProfile({ ...profile, last_name: e.target.value }))
+              }
+            />
+          </div>
         </div>
-        <div className="w-1-2">
-          <label>Last Name</label>
-          <input
-            type="text"
-            placeholder="Last Name"
-            value={p.last_name}
-            onChange={
-              (e) =>
-                setP({
-                  ...p,
-                  last_name: e.target.value,
-                })
-              //   dispatch(setProfile({ ...profile, last_name: e.target.value }))
-            }
-          />
-        </div>
-      </div>
+      )}
+
       <div className="profile-flex">
         <div className="w-1-2">
           <label>Email</label>

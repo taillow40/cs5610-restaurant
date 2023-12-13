@@ -4,14 +4,16 @@ import { Link, useNavigate } from "react-router-dom";
 import * as client from "src/store/api";
 import Cookies from "js-cookie";
 import logo from "../assets/logo.jpeg";
-import "./nav.css"
+import "./nav.css";
 
 function Navbar({ validUser }) {
   const navigate = useNavigate();
 
   const logOut = async () => {
-    const logout = await client.logout();
-    if (logout) {
+    try {
+      await client.logout();
+    } catch (error) {
+    } finally {
       Cookies.remove("user");
       navigate("/login");
       window.location.reload();
@@ -21,7 +23,12 @@ function Navbar({ validUser }) {
     <nav id="navbar" className="navbar navbar-expand-sm navbar-dark bg-dark">
       <div className="container-fluid">
         <Link to="/" className="navbar-brand">
-          <img src={logo} alt="Logo" height="80" className="d-inline-block align-top" />
+          <img
+            src={logo}
+            alt="Logo"
+            height="80"
+            className="d-inline-block align-top"
+          />
         </Link>
 
         <button

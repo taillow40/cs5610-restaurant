@@ -51,7 +51,19 @@ function Personal() {
     getFollowingsOfUser();
     fetchReviews();
   }, [cookieToken, navigate]);
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const getUserData = async () => {
+    try {
+      const fetchedProfile = await client.account();
+      if (!fetchedProfile?.data) return navigate("/login");
+      if (fetchedProfile?.data) setUser(fetchedProfile?.data);
+    } catch (error) {}
+  };
   const fetchUserFavs = async (profileId) => {
     try {
       if (!profileId) return;
@@ -61,31 +73,47 @@ function Personal() {
   };
 
   const fetchReviews = async (profileId) => {
-    const fetchedProfile = await client.account();
-    const reviews = await client.reviews(fetchedProfile.data?._id);
-    setReviews(reviews);
+    try {
+      const fetchedProfile = await client.account();
+      if (!fetchedProfile?.data) return;
+      const reviews = await client.reviews(fetchedProfile.data?._id);
+      setReviews(reviews);
+    } catch (error) {
+      console.log("reviews error :: ", error);
+    }
   };
 
   const getFollowersOfUser = async () => {
-    const fetchedProfile = await client.account();
-    const followersOfPerson = await follows.findUserFollowers(
-      fetchedProfile.data?._id
-    );
-    setFollowers(followersOfPerson?.map((f) => f.user));
+    try {
+      const fetchedProfile = await client.account();
+      if (!fetchedProfile?.data) return;
+      const followersOfPerson = await follows.findUserFollowers(
+        fetchedProfile.data?._id
+      );
+      setFollowers(followersOfPerson?.map((f) => f.user));
+    } catch (error) {
+      console.log("follow error :: ", error);
+    }
   };
+
   const getFollowingsOfUser = async () => {
-    const fetchedProfile = await client.account();
-    const followersOfPerson = await follows.findUserFollowings(
-      fetchedProfile.data?._id
-    );
-    setFollowings(followersOfPerson?.map((f) => f.followings)[0]);
+    try {
+      const fetchedProfile = await client.account();
+      if (!fetchedProfile?.data) return;
+      const followersOfPerson = await follows.findUserFollowings(
+        fetchedProfile.data?._id
+      );
+      setFollowings(followersOfPerson?.map((f) => f.followings)[0]);
+    } catch (error) {
+      console.log("follower error :: ", error);
+    }
   };
 
   const detectFavUnFavButton = async (e, resId) => {
     e.preventDefault();
     e.stopPropagation();
     const fetchedProfile = await client.account();
-    if (!fetchedProfile) return navigate("/login");
+    if (!fetchedProfile?.data) return navigate("/login");
     const userId = fetchedProfile?.data?._id;
     const response = await favoriteAPI.onGetUserFavorites(userId);
     const restaurant = response.restaurants?.find((res) => res == resId);
@@ -93,6 +121,7 @@ function Personal() {
   };
   const onAddToFav = async (e, restaurantId) => {
     const fetchedProfile = await client.account();
+    if (!fetchedProfile?.data) return navigate("/login");
     const userId = fetchedProfile?.data?._id;
     await favoriteAPI.onAddToFavorites({
       userId,
@@ -147,14 +176,23 @@ function Personal() {
           </h3>
           {profile && (
             <div className="public-profile">
-              <section>
-                <div>First name</div>
-                <div>{profile.first_name}</div>
-              </section>
-              <section>
-                <div>Last name</div>
-                <div>{profile.last_name}</div>
-              </section>
+              {user?.type === "RESTAURANT" ? (
+                <section>
+                  <div>Restaurant name</div>
+                  <div>{profile.first_name}</div>
+                </section>
+              ) : (
+                <React.Fragment>
+                  <section>
+                    <div>First name</div>
+                    <div>{profile.first_name}</div>
+                  </section>
+                  <section>
+                    <div>Last name</div>
+                    <div>{profile.last_name}</div>
+                  </section>
+                </React.Fragment>
+              )}
               <section>
                 <div>Email</div>
                 <div>{profile.email}</div>
@@ -212,34 +250,53 @@ function Personal() {
             </div>
             <div className="modal-body w-100">
               <div className="edit__grid">
-                <div className="edit__first-name">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    value={p.first_name}
-                    onChange={(e) =>
-                      setP({
-                        ...p,
-                        first_name: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="edit__last-name">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    value={p.last_name}
-                    onChange={(e) =>
-                      setP({
-                        ...p,
-                        last_name: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+                {user?.type === "RESTAURANT" ? (
+                  <div className="edit__first-name">
+                    <label>Restaurant Name</label>
+                    <input
+                      type="text"
+                      placeholder="Restaurant Name"
+                      value={p.first_name}
+                      onChange={(e) =>
+                        setP({
+                          ...p,
+                          first_name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                ) : (
+                  <React.Fragment>
+                    <div className="edit__first-name">
+                      <label>First Name</label>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        value={p.first_name}
+                        onChange={(e) =>
+                          setP({
+                            ...p,
+                            first_name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="edit__last-name">
+                      <label>Last Name</label>
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        value={p.last_name}
+                        onChange={(e) =>
+                          setP({
+                            ...p,
+                            last_name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </React.Fragment>
+                )}
                 <div className="mt-5">
                   <label>Email</label>
                   <input
@@ -354,34 +411,53 @@ function Personal() {
             </div>
             <div className="modal-body w-100">
               <div className="edit__grid">
-                <div className="edit__first-name">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    value={up.first_name}
-                    onChange={(e) =>
-                      setUp({
-                        ...up,
-                        first_name: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="edit__last-name">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    value={up.last_name}
-                    onChange={(e) =>
-                      setUp({
-                        ...up,
-                        last_name: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+                {user?.type === "RESTAURANT" ? (
+                  <div className="edit__first-name">
+                    <label> Name</label>
+                    <input
+                      type="text"
+                      placeholder="Restaurant Name"
+                      value={up.first_name}
+                      onChange={(e) =>
+                        setUp({
+                          ...up,
+                          first_name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                ) : (
+                  <React.Fragment>
+                    <div className="edit__first-name">
+                      <label>First Name</label>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        value={up.first_name}
+                        onChange={(e) =>
+                          setUp({
+                            ...up,
+                            first_name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="edit__last-name">
+                      <label>Last Name</label>
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        value={up.last_name}
+                        onChange={(e) =>
+                          setUp({
+                            ...up,
+                            last_name: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </React.Fragment>
+                )}
                 <div className="mt-5">
                   <label>Email</label>
                   <input

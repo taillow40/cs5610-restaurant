@@ -36,7 +36,6 @@ function Public() {
   const [selected, setSelected] = useState(null);
   const [favs, setFavs] = useState([]);
   const [liked, setLiked] = useState([]);
-  const [user, setUsr] = useState({});
 
   const fetchProfile = async () => {
     const fetchedProfile = await client.findUserById(profileId);
@@ -56,7 +55,22 @@ function Public() {
   };
 
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [profileUser, setProfileUser] = useState(null);
 
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const getUserData = async () => {
+    try {
+      const fetchedProfile = await client.account();
+      if (fetchedProfile?.data) setUser(fetchedProfile?.data);
+      const fetchedPublicProfile = await client.findUserById(profileId);
+      if (fetchedPublicProfile?.data)
+        setProfileUser(fetchedPublicProfile?.data);
+    } catch (error) {}
+  };
   useEffect(() => {
     fetchProfile();
     fetchLikeds();
@@ -75,22 +89,32 @@ function Public() {
   };
 
   const followUser = async () => {
-    const loggedInUser = await client.account();
-    if (!loggedInUser) return navigate("/login");
-    const loggedInId = loggedInUser?.data?._id;
-    if (loggedInId === profileId) return alert("You cannot follow yourself");
-    await follows.followUser({ userId: loggedInId, followingId: profileId });
-    getFollowingsOfUser();
-    getFollowersOfUser();
+    try {
+      const loggedInUser = user;
+      if (!loggedInUser) return navigate("/login");
+      const loggedInId = loggedInUser?._id;
+      if (loggedInId === profileId) return alert("You cannot follow yourself");
+      await follows.followUser({ userId: loggedInId, followingId: profileId });
+      getFollowingsOfUser();
+      getFollowersOfUser();
+    } catch (error) {}
   };
 
   const getFollowersOfUser = async () => {
-    const followersOfPerson = await follows.findUserFollowers(profileId);
-    setFollowers(followersOfPerson?.map((f) => f.user));
+    try {
+      const followersOfPerson = await follows.findUserFollowers(profileId);
+      setFollowers(followersOfPerson?.map((f) => f.user));
+    } catch (error) {
+      console.log("follow error :: ", error);
+    }
   };
   const getFollowingsOfUser = async () => {
-    const followersOfPerson = await follows.findUserFollowings(profileId);
-    setFollowings(followersOfPerson?.map((f) => f.followings)[0]);
+    try {
+      const followersOfPerson = await follows.findUserFollowings(profileId);
+      setFollowings(followersOfPerson?.map((f) => f.followings)[0]);
+    } catch (error) {
+      console.log("follower error :: ", error);
+    }
   };
 
   // const addFriend = async () => {
@@ -146,22 +170,31 @@ function Public() {
       <h1>Public Profile</h1>
       {profile && (
         <div className="public-profile">
-          <section>
-            <div>First name</div>
-            <div>{profile.first_name}</div>
-          </section>
-          <section>
-            <div>Last name</div>
-            <div>{profile.last_name}</div>
-          </section>
+          {profileUser?.type === "RESTAURANT" ? (
+            <section>
+              <div>Restaurant name</div>
+              <div>{profile.first_name}</div>
+            </section>
+          ) : (
+            <React.Fragment>
+              <section>
+                <div>First name</div>
+                <div>{profile.first_name}</div>
+              </section>
+              <section>
+                <div>Last name</div>
+                <div>{profile.last_name}</div>
+              </section>
+            </React.Fragment>
+          )}
           <section>
             <div>Email</div>
             <div>{profile.email}</div>
           </section>
-          <section>
+          {/* <section>
             <div>Phone number</div>
             <div>{profile.phone_number}</div>
-          </section>
+          </section> */}
           <section>
             <div>User Type</div>
             <div>{profile.type}</div>
